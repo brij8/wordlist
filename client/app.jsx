@@ -1,8 +1,10 @@
 import React from 'react';
-import Home from './pages/home';
 import Nav from './components/nav';
 import { parseRoute } from './lib';
-
+import Home from './pages/home';
+import Account from './pages/account';
+import Games from './pages/games';
+import Lists from './pages/lists';
 export default class App extends React.Component {
   constructor(props) {
     super(props);
@@ -22,8 +24,17 @@ export default class App extends React.Component {
   renderPage() {
     const { route } = this.state;
 
-    if (route.path === '') {
+    if (route.path === 'home') {
       return <Home />;
+    }
+    if (route.path === 'account') {
+      return <Account />;
+    }
+    if (route.path === 'games') {
+      return <Games />;
+    }
+    if (route.path === 'lists') {
+      return <Lists />;
     }
 
     return (
@@ -37,7 +48,9 @@ export default class App extends React.Component {
     return (
       <div>
         <Nav/>
-        { this.renderPage() }
+        <div className='container'>
+          {this.renderPage()}
+        </div>
       </div>
     );
   }
