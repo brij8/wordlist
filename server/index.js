@@ -26,7 +26,6 @@ app.get('/api/games', (req, res, next) => {
       res.json(games);
     })
     .catch(err => next(err));
-
 });
 
 app.get('/api/lists', (req, res, next) => {
@@ -47,7 +46,6 @@ app.get('/api/lists', (req, res, next) => {
       res.json(lists);
     })
     .catch(err => next(err));
-
 });
 
 app.use(errorMiddleware);
