@@ -9,7 +9,7 @@ export default class Games extends React.Component {
       lists: []
     };
     this.newGame = this.newGame.bind(this);
-    this.getGame = this.getGame.bind(this);
+    this.getGame = this.getGameLists.bind(this);
     this.getWords = this.getWords.bind(this);
   }
 
@@ -26,7 +26,8 @@ export default class Games extends React.Component {
       });
   }
 
-  getGame(event) {
+  getGameLists(event) {
+    // should use this.gameID
     // add 'active' to className to highlight
     // list the Lists in the game
     // and words in Game/Lists
@@ -66,7 +67,7 @@ export default class Games extends React.Component {
         {
           this.state.games.map(game => (
             <div key={game.gameID} className="list-group">
-              <button type="button" className="list-group-item list-group-item-action" onClick={this.getGame}>{game.gameName}</button>
+              <button type="button" className="list-group-item list-group-item-action" onClick={this.getGameLists}>{game.gameName}</button>
             </div>
           ))
         }

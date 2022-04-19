@@ -10,7 +10,7 @@ export default class Lists extends React.Component {
   }
 
   componentDidMount() {
-    fetch('api/lists')
+    fetch('/api/lists')
       .then(res => res.json())
       .then(lists => {
         this.setState({ lists });

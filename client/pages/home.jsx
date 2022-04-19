@@ -10,7 +10,7 @@ export default class Home extends React.Component {
   }
 
   componentDidMount() {
-    fetch('api/home')
+    fetch('/api/home')
       .then(res => res.json())
       .then(games => {
         this.setState({ currentGame: 'gameName' });
