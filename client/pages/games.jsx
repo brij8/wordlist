@@ -8,6 +8,9 @@ export default class Games extends React.Component {
       games: [],
       lists: []
     };
+    this.newGame = this.newGame.bind(this);
+    this.getGame = this.getGame.bind(this);
+    this.getWords = this.getWords.bind(this);
   }
 
   componentDidMount() {
@@ -34,8 +37,20 @@ export default class Games extends React.Component {
     // list the words in the Game/List
   }
 
-  newGame(event) {
-    // generate new gameTable
+  // generate new gameTable
+  newGame() {
+    const req = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify('')
+    };
+    fetch('./api/games', req)
+      .then(response => response.json())
+      .then(makeGame => {
+        const allGames = this.state.games.concat(makeGame);
+        this.setState({ games: allGames });
+      }
+      );
   }
 
   render() {
@@ -43,17 +58,15 @@ export default class Games extends React.Component {
       <div className='py-5'>
         <h1>Games</h1>
         <h2>user view/edit games</h2>
-        {
           <div>
-            <button type="button" className="newGameBtn" onClick={this.newGame()}>new</button>
+            <button type="button" className="newGameBtn" onClick={this.newGame}>new</button>
             <button type="button" className="editGameBtn">edit</button>
             <button type="button" className="deleteGameBtn">delete</button>
           </div>
-        }
         {
           this.state.games.map(game => (
             <div key={game.gameID} className="list-group">
-              <button type="button" className="list-group-item list-group-item-action" onClick={this.getGame()}>{game.gameName}</button>
+              <button type="button" className="list-group-item list-group-item-action" onClick={this.getGame}>{game.gameName}</button>
             </div>
           ))
         }

@@ -8,12 +8,13 @@ const app = express();
 
 app.use(staticMiddleware);
 
+// GET users Games
 app.get('/api/games', (req, res, next) => {
   // v--- will be req.user.userID later ---v
   const userID = 1;
   const sql = `
   select
-    "gameName"
+    "gameName", "gameID"
   from
     "games"
   where
@@ -28,6 +29,7 @@ app.get('/api/games', (req, res, next) => {
     .catch(err => next(err));
 });
 
+// GET users Lists
 app.get('/api/lists', (req, res, next) => {
   // v--- will be req.user.userID later ---v
   const userID = 1;
@@ -44,6 +46,28 @@ app.get('/api/lists', (req, res, next) => {
     .then(results => {
       const lists = results.rows;
       res.json(lists);
+    })
+    .catch(err => next(err));
+});
+
+// GET users words by game/list
+
+// create new Game
+app.post('/api/games', (req, res, next) => {
+  // v--- will be req.user.userID later ---v
+  const userID = 1;
+  const sql = `
+  insert into "games" ("userID")
+  values ($1)
+  returning *
+  `;
+  const params = [userID];
+  db.query(sql, params)
+    .then(results => {
+      const ng = results.rows;
+      // eslint-disable-next-line no-console
+      console.log('results.rows: ', results.rows);
+      res.json(ng);
     })
     .catch(err => next(err));
 });

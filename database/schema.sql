@@ -20,7 +20,7 @@ CREATE TABLE "users" (
 
 
 CREATE TABLE "games" (
-	"gameName" TEXT NOT NULL,
+	"gameName" TEXT NOT NULL default 'New Game',
 	"gameID" serial NOT NULL,
 	"userID" integer NOT NULL,
 	-- "createdAt" DATETIME NOT NULL default now(),
