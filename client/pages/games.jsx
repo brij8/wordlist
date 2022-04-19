@@ -14,12 +14,12 @@ export default class Games extends React.Component {
   }
 
   componentDidMount() {
-    fetch('api/games')
+    fetch('/api/games')
       .then(res => res.json())
       .then(games => {
         this.setState({ games });
       });
-    fetch('api/lists')
+    fetch('/api/lists')
       .then(res => res.json())
       .then(lists => {
         this.setState({ lists });
@@ -44,7 +44,7 @@ export default class Games extends React.Component {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify('')
     };
-    fetch('./api/games', req)
+    fetch('/api/games', req)
       .then(response => response.json())
       .then(makeGame => {
         const allGames = this.state.games.concat(makeGame);

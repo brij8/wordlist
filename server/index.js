@@ -50,7 +50,9 @@ app.get('/api/lists', (req, res, next) => {
     .catch(err => next(err));
 });
 
-// GET users words by game/list
+// GET a Games Lists
+
+// GET a Game/Lists words
 
 // create new Game
 app.post('/api/games', (req, res, next) => {
