@@ -5,3 +5,9 @@
 .boxbox {
   display: flex;
 }
+
+.list-group-item.active {
+  color: black;
+  background-color: #b2d0fc;
+  border-color: #b2d0fc;
+}

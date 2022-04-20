@@ -7,13 +7,13 @@ function Nav() {
 
         <ul className="navbar-nav me-auto mb-2 mb-lg-0">
           <li className="nav-item">
-            <a className="nav-link active" href="#account">Account</a>
+            <a className="nav-link" href="#account">Account</a>
           </li>
           <li className="nav-item">
-            <a className="nav-link active" href="#games">Games</a>
+            <a className="nav-link" href="#games">Games</a>
           </li>
           <li className="nav-item">
-            <a className="nav-link active" href="#lists">Lists</a>
+            <a className="nav-link" href="#lists">Lists</a>
           </li>
         </ul>
 

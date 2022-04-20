@@ -8,11 +8,15 @@ export default class Games extends React.Component {
       games: [],
       lists: [],
       showLists: [],
-      showWords: []
+      showWords: [],
+      gameClicked: -1,
+      listClicked: -1
     };
     this.newGame = this.newGame.bind(this);
     this.getGameLists = this.getGameLists.bind(this);
     this.getWords = this.getWords.bind(this);
+    this.setClassGame = this.setClassGame.bind(this);
+    this.setClassList = this.setClassList.bind(this);
   }
 
   componentDidMount() {
@@ -30,6 +34,8 @@ export default class Games extends React.Component {
 
   // get lists from selected game
   getGameLists(gameID) {
+    this.setState({ gameClicked: gameID });
+    this.setState({ showWords: [] });
     fetch('/api/gamelist/' + gameID)
       .then(response => response.json())
       .then(gameLists => {
@@ -39,6 +45,7 @@ export default class Games extends React.Component {
 
   // get words from selected list
   getWords(listID) {
+    this.setState({ listClicked: listID });
     fetch('/api/listWords/' + listID)
       .then(response => response.json())
       .then(listwords => {
@@ -46,7 +53,7 @@ export default class Games extends React.Component {
       });
   }
 
-  // generate new gameTable
+  // generate new game
   newGame() {
     const req = {
       method: 'POST',
@@ -60,6 +67,20 @@ export default class Games extends React.Component {
         this.setState({ games: allGames });
       }
       );
+  }
+
+  // set class to show selection
+  setClassGame(key) {
+    return (this.state.gameClicked === key)
+      ? 'list-group-item list-group-item-action active'
+      : 'list-group-item list-group-item-action';
+  }
+
+  // set class to show selection
+  setClassList(key) {
+    return (this.state.listClicked === key)
+      ? 'list-group-item list-group-item-action active'
+      : 'list-group-item list-group-item-action';
   }
 
   render() {
@@ -81,7 +102,7 @@ export default class Games extends React.Component {
         {
           this.state.games.map(game => (
             <div key={game.gameID} className="list-group-games">
-              <button type="button" className="list-group-item list-group-item-action" onClick={() => this.getGameLists(game.gameID)}>{game.gameName}</button>
+              <button type="button" className={this.setClassGame(game.gameID)} onClick={() => this.getGameLists(game.gameID)}>{game.gameName}</button>
             </div>
           ))
         }
@@ -90,7 +111,7 @@ export default class Games extends React.Component {
         {
           this.state.showLists.map(list => (
             <div key={list.listID} className="list-group-lists">
-              <button type="button" className="list-group-item list-group-item-action" onClick={() => this.getWords(list.listID)}>{list.listName}</button>
+              <button type="button" className={this.setClassList(list.listID)} onClick={() => this.getWords(list.listID)}>{list.listName}</button>
             </div>
           ))
         }
