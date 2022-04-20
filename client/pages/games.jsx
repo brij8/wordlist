@@ -7,7 +7,8 @@ export default class Games extends React.Component {
     this.state = {
       games: [],
       lists: [],
-      showLists: []
+      showLists: [],
+      showWords: []
     };
     this.newGame = this.newGame.bind(this);
     this.getGameLists = this.getGameLists.bind(this);
@@ -25,13 +26,9 @@ export default class Games extends React.Component {
       .then(lists => {
         this.setState({ lists: lists });
       });
-    // fetch('/api/lists')
-    //   .then(res => res.json())
-    //   .then(lists => {
-    //     this.setState({ showLists: lists });
-    //   });
   }
 
+  // get lists from selected game
   getGameLists(gameID) {
     fetch('/api/gamelist/' + gameID)
       .then(response => response.json())
@@ -40,8 +37,13 @@ export default class Games extends React.Component {
       });
   }
 
-  getWords(event) {
-    // list the words in the Game/List
+  // get words from selected list
+  getWords(listID) {
+    fetch('/api/listWords/' + listID)
+      .then(response => response.json())
+      .then(listwords => {
+        this.setState({ showWords: listwords });
+      });
   }
 
   // generate new gameTable
@@ -62,7 +64,9 @@ export default class Games extends React.Component {
 
   render() {
     return (
-      <div className='py-5'>
+      <div className='py-5 gamelist'>
+        <div className="menubox">
+        <div className="gamesmenu">
         <h1>Games</h1>
         <h2>user view/edit games</h2>
           <div>
@@ -70,20 +74,37 @@ export default class Games extends React.Component {
             <button type="button" className="editGameBtn">edit</button>
             <button type="button" className="deleteGameBtn">delete</button>
           </div>
+        </div>
+        </div>
+        <div className="boxbox">
+        <div className="gamebox">
         {
           this.state.games.map(game => (
-            <div key={game.gameID} className="list-group">
+            <div key={game.gameID} className="list-group-games">
               <button type="button" className="list-group-item list-group-item-action" onClick={() => this.getGameLists(game.gameID)}>{game.gameName}</button>
             </div>
           ))
         }
+        </div>
+        <div className="listbox">
         {
           this.state.showLists.map(list => (
-            <div key={list.listID} className="list-group">
-              <button type="button" className="list-group-item list-group-item-action" onClick={this.getWords}>{list.listName}</button>
+            <div key={list.listID} className="list-group-lists">
+              <button type="button" className="list-group-item list-group-item-action" onClick={() => this.getWords(list.listID)}>{list.listName}</button>
             </div>
           ))
         }
+        </div>
+        <div className="wordbox">
+            {
+              this.state.showWords.map(word => (
+                <div key={word.wordID} className="list-group-words">
+                  <button type="button" className="list-group-item list-group-item-action" onClick={this.select}>{word.word}</button>
+                </div>
+              ))
+            }
+        </div>
+        </div>
       </div>
     );
   }

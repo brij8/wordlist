@@ -24,7 +24,7 @@ export default class Lists extends React.Component {
 
   render() {
     return (
-      <div className='py-5'>
+      <div className="py-5">
         <h1>Lists</h1>
         <h2>user view/edit lists</h2>
         {
@@ -35,11 +35,13 @@ export default class Lists extends React.Component {
           </div>
         }
         {
+          // <div className="lists">
           this.state.lists.map(list => (
             <div key={list.listID} className="list-group">
               <button type="button" className="list-group-item list-group-item-action" onClick={this.getWords()}>{list.listName}</button>
             </div>
           ))
+          // </div>
         }
       </div>
     );

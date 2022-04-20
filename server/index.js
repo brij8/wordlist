@@ -76,6 +76,25 @@ app.get('/api/gamelist/:gameID', (req, res, next) => {
 });
 
 // GET a Game/Lists words
+app.get('/api/listwords/:listID', (req, res, next) => {
+  const listID = Number(req.params.listID);
+  const sql = `
+  select
+    "listWordID",
+    "word"
+  from
+    "listwords"
+  where
+    "listID" = $1;
+  `;
+  const param = [listID];
+  db.query(sql, param)
+    .then(results => {
+      const words = results.rows;
+      res.json(words);
+    })
+    .catch(err => next(err));
+});
 
 // create new Game
 app.post('/api/games', (req, res, next) => {

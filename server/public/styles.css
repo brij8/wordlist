@@ -1,3 +1,7 @@
-.list-group {
+.list-group-games {
   width: 200px;
+}
+
+.boxbox {
+  display: flex;
 }
