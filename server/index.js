@@ -35,7 +35,7 @@ app.get('/api/lists', (req, res, next) => {
   const userID = 1;
   const sql = `
   select
-    "listName"
+    "listName", "listID"
   from
     "lists"
   where
@@ -51,6 +51,29 @@ app.get('/api/lists', (req, res, next) => {
 });
 
 // GET a Games Lists
+app.get('/api/gamelist/:gameID', (req, res, next) => {
+  const gameID = Number(req.params.gameID);
+  const sql = `
+  select
+    "listID",
+    "listName"
+  from
+    "gamelist"
+  join
+    "lists"
+  using
+    ("listID")
+  where
+    "gameID" = $1;
+  `;
+  const param = [gameID];
+  db.query(sql, param)
+    .then(results => {
+      const lists = results.rows;
+      res.json(lists);
+    })
+    .catch(err => next(err));
+});
 
 // GET a Game/Lists words
 
@@ -67,8 +90,6 @@ app.post('/api/games', (req, res, next) => {
   db.query(sql, params)
     .then(results => {
       const ng = results.rows;
-      // eslint-disable-next-line no-console
-      console.log('results.rows: ', results.rows);
       res.json(ng);
     })
     .catch(err => next(err));

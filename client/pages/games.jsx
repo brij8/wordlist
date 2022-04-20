@@ -6,10 +6,11 @@ export default class Games extends React.Component {
 
     this.state = {
       games: [],
-      lists: []
+      lists: [],
+      showLists: []
     };
     this.newGame = this.newGame.bind(this);
-    this.getGame = this.getGameLists.bind(this);
+    this.getGameLists = this.getGameLists.bind(this);
     this.getWords = this.getWords.bind(this);
   }
 
@@ -22,19 +23,24 @@ export default class Games extends React.Component {
     fetch('/api/lists')
       .then(res => res.json())
       .then(lists => {
-        this.setState({ lists });
+        this.setState({ lists: lists });
+      });
+    // fetch('/api/lists')
+    //   .then(res => res.json())
+    //   .then(lists => {
+    //     this.setState({ showLists: lists });
+    //   });
+  }
+
+  getGameLists(gameID) {
+    fetch('/api/gamelist/' + gameID)
+      .then(response => response.json())
+      .then(gameLists => {
+        this.setState({ showLists: gameLists });
       });
   }
 
-  getGameLists(event) {
-    // should use this.gameID
-    // add 'active' to className to highlight
-    // list the Lists in the game
-    // and words in Game/Lists
-  }
-
   getWords(event) {
-    // add 'active' to className to highlight
     // list the words in the Game/List
   }
 
@@ -67,7 +73,14 @@ export default class Games extends React.Component {
         {
           this.state.games.map(game => (
             <div key={game.gameID} className="list-group">
-              <button type="button" className="list-group-item list-group-item-action" onClick={this.getGameLists}>{game.gameName}</button>
+              <button type="button" className="list-group-item list-group-item-action" onClick={() => this.getGameLists(game.gameID)}>{game.gameName}</button>
+            </div>
+          ))
+        }
+        {
+          this.state.showLists.map(list => (
+            <div key={list.listID} className="list-group">
+              <button type="button" className="list-group-item list-group-item-action" onClick={this.getWords}>{list.listName}</button>
             </div>
           ))
         }
