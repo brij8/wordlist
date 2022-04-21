@@ -1,9 +1,16 @@
-.list-group-games {
-  width: 200px;
+.titlebox {
+  margin-bottom: 35px;
 }
 
 .boxbox {
   display: flex;
+}
+
+.gamebox,
+.listbox,
+.wordbox {
+  flex-basis: 33%;
+  margin-right: auto;
 }
 
 .list-group-item.active {
