@@ -61,7 +61,7 @@ export default class Lists extends React.Component {
 
   // remove selection
 
-  removeList(key) {
+  deleteList(key) {
     // eslint-disable-next-line no-console
     console.log('this.state.listClicked: ', this.state.listClicked);
   }

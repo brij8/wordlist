@@ -18,9 +18,11 @@ export default class Games extends React.Component {
     this.getWords = this.getWords.bind(this);
     this.setClassGame = this.setClassGame.bind(this);
     this.setClassList = this.setClassList.bind(this);
+    this.setClassShowList = this.setClassShowList.bind(this);
     this.setClassWord = this.setClassWord.bind(this);
     this.selectWord = this.selectWord.bind(this);
     this.deleteGame = this.deleteGame.bind(this);
+    this.addList = this.addList.bind(this);
     this.removeList = this.removeList.bind(this);
     this.removeWord = this.removeWord.bind(this);
   }
@@ -34,7 +36,7 @@ export default class Games extends React.Component {
     fetch('/api/lists')
       .then(res => res.json())
       .then(lists => {
-        this.setState({ lists: lists });
+        this.setState({ lists });
       });
   }
 
@@ -51,6 +53,8 @@ export default class Games extends React.Component {
 
   // get words from selected list
   getWords(listID) {
+    // eslint-disable-next-line no-console
+    console.log('list selected: ', listID);
     this.setState({ listClicked: listID });
     fetch('/api/listWords/' + listID)
       .then(response => response.json())
@@ -75,38 +79,35 @@ export default class Games extends React.Component {
       );
   }
 
-  // set class to show game selection
-  setClassGame(key) {
-    return (this.state.gameClicked === key)
-      ? 'list-group-item list-group-item-action active'
-      : 'list-group-item list-group-item-action';
-  }
+  // add lists to game
 
-  // set class to show list selection
-  setClassList(key) {
-    return (this.state.listClicked === key)
-      ? 'list-group-item list-group-item-action active'
-      : 'list-group-item list-group-item-action';
-  }
+  // edit selected game (to rename)
 
-  // set class to show word selection
-  setClassWord(key) {
-    return (this.state.wordClicked === key)
-      ? 'list-group-item list-group-item-action active'
-      : 'list-group-item list-group-item-action';
+  // delete selected game
+  deleteGame() {
+    const ID = this.state.gameClicked;
+    const req = {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify('')
+    };
+    fetch('/api/games/' + ID, req);
+    const findGame = game => game.gameID === ID;
+    const delGame = this.state.games.findIndex(findGame);
+    this.state.games.splice(delGame, 1);
+    this.forceUpdate();
   }
 
   // select a word
   selectWord(key) {
-    this.setState({ wordClicked: key });
     // eslint-disable-next-line no-console
-    console.log('this.state.wordClicked: ', this.state.wordClicked);
+    console.log('word selected: ', key);
+    this.setState({ wordClicked: key });
   }
 
-  // delete selections
-  deleteGame(key) {
+  addList(key) {
     // eslint-disable-next-line no-console
-    console.log('this.state.gameClicked: ', this.state.gameClicked);
+    console.log('this.state.listClicked: ', this.state.listClicked);
   }
 
   removeList(key) {
@@ -117,6 +118,35 @@ export default class Games extends React.Component {
   removeWord(key) {
     // eslint-disable-next-line no-console
     console.log('this.state.wordClicked: ', this.state.wordClicked);
+  }
+
+  // ---------selection styling----------------
+  // set class to show game selection
+  setClassGame(key) {
+    return (this.state.gameClicked === key)
+      ? 'list-group-item list-group-item-action active'
+      : 'list-group-item list-group-item-action';
+  }
+
+  // set class to show list selection
+  setClassList(key) {
+    return (this.state.listClicked === key)
+      ? 'list-group-item list-group-item-action active-list'
+      : 'list-group-item list-group-item-action';
+  }
+
+  // set class for lists already in a game
+  setClassShowList(key) {
+    return (this.state.listClicked === key)
+      ? 'sel-game-list-style list-group-item list-group-item-action active'
+      : 'sel-game-list-style list-group-item list-group-item-action';
+  }
+
+  // set class to show word selection
+  setClassWord(key) {
+    return (this.state.wordClicked === key)
+      ? 'list-group-item list-group-item-action active'
+      : 'list-group-item list-group-item-action';
   }
 
   render() {
@@ -144,20 +174,32 @@ export default class Games extends React.Component {
         }
         </div>
         <div className="listbox">
-            <div className="listmenu">
-              <button type="button" className="newListBtn" onClick={this.newList}>new</button>
-              <button type="button" className="editListBtn">edit</button>
-              <button type="button" className="removeListBtn" onClick={this.removeList}>remove</button>
-            </div>
-        {
-          this.state.showLists.map(list => (
-            <div key={list.listID} className="list-group-lists">
-              <button type="button" className={this.setClassList(list.listID)} onClick={() => this.getWords(list.listID)}>{list.listName}</button>
-            </div>
-          ))
-        }
-        </div>
-        <div className="wordbox">
+          <div className="listmenu">
+            <button type="button" className="newListBtn" onClick={this.newList}>new</button>
+            <button type="button" className="editListBtn">edit</button>
+            <button type="button" className="removeListBtn" onClick={this.removeList}>remove</button>
+            <button type="button" className="addListBtn" onClick={this.addList}>add</button>
+          </div>
+          <div className="sel-game-lists">
+          {// show lists of selected game
+            this.state.showLists.map(list => (
+                <div key={list.listID} className="list-group-lists">
+                  <button type="button" className={this.setClassShowList(list.listID)} onClick={() => this.getWords(list.listID)}>{list.listName}</button>
+                </div>
+            ))
+          }
+          </div>
+          <div className="all-lists">
+          { // show all users lists
+            this.state.lists.map(list => (
+              <div key={list.listID} className="list-group-lists">
+                <button type="button" className={this.setClassList(list.listID)} onClick={() => this.getWords(list.listID)}>{list.listName}</button>
+              </div>
+            ))
+          }
+          </div>
+          </div>
+          <div className="wordbox">
             <div className="wordmenu">
               <button type="button" className="addWordBtn" onClick={this.addWord}>add</button>
               <button type="button" className="editWordBtn">edit</button>
@@ -170,7 +212,7 @@ export default class Games extends React.Component {
                 </div>
               ))
             }
-        </div>
+          </div>
         </div>
       </div>
     );

@@ -18,3 +18,19 @@
   background-color: #b2d0fc;
   border-color: #b2d0fc;
 }
+
+.list-group-item.active-list {
+  color: black;
+  background-color: #b7ffae;
+  border-color: #5cd44c;
+}
+
+.sel-game-lists {
+  border: 2px solid #8686e6;
+}
+
+.sel-game-list-style {
+  color: black;
+  background-color: #b2d0fc;
+  border-color: #b2d0fc;
+}

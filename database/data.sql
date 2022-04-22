@@ -9,6 +9,8 @@ insert into games
   values
     ('1', 'u1game1'),
     ('1', 'u1game2'),
+    ('1', 'u1game3'),
+    ('1', 'u1game4'),
     ('2', 'u2game1'),
     ('2', 'u2game2');
 
@@ -18,6 +20,9 @@ insert into lists
     ('1', 'u1list1-numbersD'),
     ('1', 'u1list2-numbersF'),
     ('1', 'u1list3-numbersS'),
+    ('1', 'u1list4-colorsD'),
+    ('1', 'u1list5-colorsF'),
+    ('1', 'u1list6-colorsS'),
     ('2', 'u2list1-colorsD'),
     ('2', 'u2list2-colorsF'),
     ('2', 'u2list3-colorsS');
@@ -32,7 +37,11 @@ insert into gamelist
     ('3', '4'),
     ('3', '5'),
     ('4', '5'),
-    ('4', '6');
+    ('4', '6'),
+    ('5', '4'),
+    ('5', '5'),
+    ('6', '5'),
+    ('6', '6');
 
 insert into listwords
   ("listID", "word")

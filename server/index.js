@@ -75,7 +75,7 @@ app.get('/api/gamelist/:gameID', (req, res, next) => {
     .catch(err => next(err));
 });
 
-// GET a Game/Lists words
+// GET a Lists words
 app.get('/api/listwords/:listID', (req, res, next) => {
   const listID = Number(req.params.listID);
   const sql = `
@@ -113,6 +113,22 @@ app.post('/api/games', (req, res, next) => {
     })
     .catch(err => next(err));
 });
+
+// delete a selected game
+app.delete('/api/games/:gameID', (req, res, next) => {
+  const gameID = Number(req.params.gameID);
+  const sql = `
+  delete from
+    "games"
+  where
+    "gameID" = $1
+  `;
+  const param = [gameID];
+  db.query(sql, param)
+    .catch(err => next(err));
+});
+
+// add lists to game
 
 app.use(errorMiddleware);
 
