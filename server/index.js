@@ -3,10 +3,12 @@ const express = require('express');
 const errorMiddleware = require('./error-middleware');
 const staticMiddleware = require('./static-middleware');
 const db = require('./db');
+const bodyParser = require('body-parser');
 
 const app = express();
 
-app.use(staticMiddleware);
+// app.use(express.json());
+app.use(staticMiddleware, bodyParser.json());
 
 // GET users Games
 app.get('/api/games', (req, res, next) => {
@@ -128,7 +130,30 @@ app.delete('/api/games/:gameID', (req, res, next) => {
     .catch(err => next(err));
 });
 
-// add lists to game
+// add list to game
+app.post('/api/gamelist/', (req, res, next) => {
+  const game = Number(req.body.selGameID);
+  const list = Number(req.body.selListID);
+  const sql = `
+  WITH inserted AS (
+    INSERT INTO "gamelist" ("gameID", "listID") VALUES ($1, $2) RETURNING *
+  )
+  SELECT
+    inserted.*, lists.*
+  FROM
+    inserted
+  INNER JOIN
+    lists
+  USING ("listID")
+  `;
+  const params = [game, list];
+  db.query(sql, params)
+    .then(results => {
+      const nl = results.rows;
+      res.json(nl);
+    })
+    .catch(err => next(err));
+});
 
 app.use(errorMiddleware);
 

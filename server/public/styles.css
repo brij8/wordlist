@@ -1,3 +1,30 @@
+body {
+  background-color: #404040;
+}
+
+h1 {
+  color: #6c9eea;
+}
+
+h2 {
+  color: #c4c4c4;
+}
+
+.container {
+  margin: 0 auto;
+  padding: 0;
+}
+
+.game-fp {
+  width: auto;
+}
+
+.wordl-fp {
+  display: block;
+  max-width: 70%;
+  margin: 0 auto;
+}
+
 .titlebox {
   margin-bottom: 35px;
 }
@@ -13,6 +40,10 @@
   margin-right: auto;
 }
 
+.list-group-item {
+  background-color: #c4c4c4;
+}
+
 .list-group-item.active {
   color: black;
   background-color: #b2d0fc;
@@ -26,11 +57,15 @@
 }
 
 .sel-game-lists {
-  border: 2px solid #8686e6;
+  /* border: 2px solid #8686e6; */
 }
 
 .sel-game-list-style {
   color: black;
   background-color: #b2d0fc;
   border-color: #b2d0fc;
+}
+
+.all-lists {
+  border: 2px solid #5cd44c;
 }

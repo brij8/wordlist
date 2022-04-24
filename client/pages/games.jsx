@@ -67,8 +67,7 @@ export default class Games extends React.Component {
   newGame() {
     const req = {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify('')
+      headers: { 'Content-Type': 'application/json' }
     };
     fetch('/api/games', req)
       .then(response => response.json())
@@ -79,8 +78,6 @@ export default class Games extends React.Component {
       );
   }
 
-  // add lists to game
-
   // edit selected game (to rename)
 
   // delete selected game
@@ -88,14 +85,36 @@ export default class Games extends React.Component {
     const ID = this.state.gameClicked;
     const req = {
       method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify('')
+      headers: { 'Content-Type': 'application/json' }
     };
     fetch('/api/games/' + ID, req);
     const findGame = game => game.gameID === ID;
     const delGame = this.state.games.findIndex(findGame);
     this.state.games.splice(delGame, 1);
-    this.forceUpdate();
+    this.setState({ showLists: [] });
+  }
+
+  // add lists to game
+  addList() {
+    const game = this.state.gameClicked;
+    const list = this.state.listClicked;
+
+    const req = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        selGameID: game,
+        selListID: list
+      })
+    };
+    fetch('/api/gamelist/', req)
+      .then(response => response.json())
+      .then(addList => {
+        const allLists = this.state.showLists.concat(addList);
+        this.setState({ showLists: allLists });
+        this.forceUpdate();
+      }
+      );
   }
 
   // select a word
@@ -103,11 +122,6 @@ export default class Games extends React.Component {
     // eslint-disable-next-line no-console
     console.log('word selected: ', key);
     this.setState({ wordClicked: key });
-  }
-
-  addList(key) {
-    // eslint-disable-next-line no-console
-    console.log('this.state.listClicked: ', this.state.listClicked);
   }
 
   removeList(key) {
@@ -165,7 +179,7 @@ export default class Games extends React.Component {
             <button type="button" className="editGameBtn">edit</button>
             <button type="button" className="deleteGameBtn" onClick={this.deleteGame}>delete</button>
           </div>
-        {
+        { // show users games
           this.state.games.map(game => (
             <div key={game.gameID} className="list-group-games">
               <button type="button" className={this.setClassGame(game.gameID)} onClick={() => this.getGameLists(game.gameID)}>{game.gameName}</button>
