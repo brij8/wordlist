@@ -69,7 +69,7 @@ ALTER TABLE "games" ADD CONSTRAINT "games_fk0" FOREIGN KEY ("userID") REFERENCES
 
 ALTER TABLE "lists" ADD CONSTRAINT "lists_fk0" FOREIGN KEY ("userID") REFERENCES "users"("userID");
 
-ALTER TABLE "gamelist" ADD CONSTRAINT "gamelist_fk0" FOREIGN KEY ("gameID") REFERENCES "games"("gameID");
-ALTER TABLE "gamelist" ADD CONSTRAINT "gamelist_fk1" FOREIGN KEY ("listID") REFERENCES "lists"("listID");
+ALTER TABLE "gamelist" ADD CONSTRAINT "gamelist_fk0" FOREIGN KEY ("gameID") REFERENCES "games"("gameID") ON DELETE CASCADE;
+ALTER TABLE "gamelist" ADD CONSTRAINT "gamelist_fk1" FOREIGN KEY ("listID") REFERENCES "lists"("listID") ON DELETE CASCADE;
 
 ALTER TABLE "listwords" ADD CONSTRAINT "listwords_fk0" FOREIGN KEY ("listID") REFERENCES "lists"("listID");

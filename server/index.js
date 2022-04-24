@@ -3,10 +3,12 @@ const express = require('express');
 const errorMiddleware = require('./error-middleware');
 const staticMiddleware = require('./static-middleware');
 const db = require('./db');
+const bodyParser = require('body-parser');
 
 const app = express();
 
-app.use(staticMiddleware);
+// app.use(express.json());
+app.use(staticMiddleware, bodyParser.json());
 
 // GET users Games
 app.get('/api/games', (req, res, next) => {
@@ -35,7 +37,7 @@ app.get('/api/lists', (req, res, next) => {
   const userID = 1;
   const sql = `
   select
-    "listName"
+    "listName", "listID"
   from
     "lists"
   where
@@ -51,8 +53,50 @@ app.get('/api/lists', (req, res, next) => {
 });
 
 // GET a Games Lists
+app.get('/api/gamelist/:gameID', (req, res, next) => {
+  const gameID = Number(req.params.gameID);
+  const sql = `
+  select
+    "listID",
+    "listName"
+  from
+    "gamelist"
+  join
+    "lists"
+  using
+    ("listID")
+  where
+    "gameID" = $1;
+  `;
+  const param = [gameID];
+  db.query(sql, param)
+    .then(results => {
+      const lists = results.rows;
+      res.json(lists);
+    })
+    .catch(err => next(err));
+});
 
-// GET a Game/Lists words
+// GET a Lists words
+app.get('/api/listwords/:listID', (req, res, next) => {
+  const listID = Number(req.params.listID);
+  const sql = `
+  select
+    "listWordID",
+    "word"
+  from
+    "listwords"
+  where
+    "listID" = $1;
+  `;
+  const param = [listID];
+  db.query(sql, param)
+    .then(results => {
+      const words = results.rows;
+      res.json(words);
+    })
+    .catch(err => next(err));
+});
 
 // create new Game
 app.post('/api/games', (req, res, next) => {
@@ -67,9 +111,46 @@ app.post('/api/games', (req, res, next) => {
   db.query(sql, params)
     .then(results => {
       const ng = results.rows;
-      // eslint-disable-next-line no-console
-      console.log('results.rows: ', results.rows);
       res.json(ng);
+    })
+    .catch(err => next(err));
+});
+
+// delete a selected game
+app.delete('/api/games/:gameID', (req, res, next) => {
+  const gameID = Number(req.params.gameID);
+  const sql = `
+  delete from
+    "games"
+  where
+    "gameID" = $1
+  `;
+  const param = [gameID];
+  db.query(sql, param)
+    .catch(err => next(err));
+});
+
+// add list to game
+app.post('/api/gamelist/', (req, res, next) => {
+  const game = Number(req.body.selGameID);
+  const list = Number(req.body.selListID);
+  const sql = `
+  WITH inserted AS (
+    INSERT INTO "gamelist" ("gameID", "listID") VALUES ($1, $2) RETURNING *
+  )
+  SELECT
+    inserted.*, lists.*
+  FROM
+    inserted
+  INNER JOIN
+    lists
+  USING ("listID")
+  `;
+  const params = [game, list];
+  db.query(sql, params)
+    .then(results => {
+      const nl = results.rows;
+      res.json(nl);
     })
     .catch(err => next(err));
 });
