@@ -148,7 +148,7 @@ app.delete('/api/games/:gameID', (req, res, next) => {
     .catch(err => next(err));
 });
 
-// delete a selected list ***IN PROGRESS***
+// delete a selected list
 app.delete('/api/lists/:listID', (req, res, next) => {
   const listID = Number(req.params.listID);
   const sql = `
@@ -184,6 +184,28 @@ app.post('/api/gamelist/', (req, res, next) => {
       const nl = results.rows;
       res.json(nl);
     })
+    .catch(err => next(err));
+});
+
+// EDIT selected gameName
+
+// EDIT selected listName
+
+// EDIT selected word
+
+// create new word
+
+// delete selected word
+app.delete('/api/listwords/:listWordID', (req, res, next) => {
+  const wordID = Number(req.params.listWordID);
+  const sql = `
+  delete from
+    "listwords"
+  where
+    "listWordID" = $1
+  `;
+  const param = [wordID];
+  db.query(sql, param)
     .catch(err => next(err));
 });
 

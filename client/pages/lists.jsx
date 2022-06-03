@@ -14,9 +14,9 @@ export default class Lists extends React.Component {
     this.getWords = this.getWords.bind(this);
     this.setClassList = this.setClassList.bind(this);
     this.setClassWord = this.setClassWord.bind(this);
-    this.selectWord = this.selectWord.bind(this);
     this.deleteList = this.deleteList.bind(this);
-    // this.deleteWord = this.deleteWord.bind(this);
+    this.selectWord = this.selectWord.bind(this);
+    this.deleteWord = this.deleteWord.bind(this);
   }
 
   componentDidMount() {
@@ -42,7 +42,7 @@ export default class Lists extends React.Component {
       );
   }
 
-  // get words from selected list
+  // get and show words from selected list
   getWords(listID) {
     this.setState({ listClicked: listID });
     fetch('/api/listWords/' + listID)
@@ -52,7 +52,7 @@ export default class Lists extends React.Component {
       });
   }
 
-  // delete selected list ***IN PROGRESS***
+  // delete selected list
   deleteList() {
     const ID = this.state.listClicked;
     const req = {
@@ -66,10 +66,26 @@ export default class Lists extends React.Component {
     this.setState({ showWords: [] });
   }
 
-  // deleteList(key) {
-  //   // eslint-disable-next-line no-console
-  //   console.log('this.state.listClicked: ', this.state.listClicked);
-  // }
+  // select a word
+  selectWord(key) {
+    this.setState({ wordClicked: key });
+    // eslint-disable-next-line no-console
+    console.log('this.state.wordClicked: ', this.state.wordClicked);
+  }
+
+  // delete selected word
+  deleteWord() {
+    const ID = Number(this.state.wordClicked);
+    const req = {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' }
+    };
+    fetch('/api/listwords/' + ID, req);
+    const findWord = word => word.listWordID === ID;
+    const delWord = this.state.showWords.findIndex(findWord);
+    this.state.showWords.splice(delWord, 1);
+    this.forceUpdate();
+  }
 
   // set class to show list selection
   setClassList(key) {
@@ -83,13 +99,6 @@ export default class Lists extends React.Component {
     return (this.state.wordClicked === key)
       ? 'list-group-item list-group-item-action active'
       : 'list-group-item list-group-item-action';
-  }
-
-  // select a word
-  selectWord(key) {
-    this.setState({ wordClicked: key });
-    // eslint-disable-next-line no-console
-    console.log('this.state.wordClicked: ', this.state.wordClicked);
   }
 
   render() {
