@@ -32,7 +32,7 @@ CREATE TABLE "games" (
 
 
 CREATE TABLE "lists" (
-	"listName" TEXT NOT NULL,
+	"listName" TEXT NOT NULL default 'New List',
 	"listID" serial NOT NULL,
 	"userID" integer NOT NULL,
 	-- "createdAt" DATETIME NOT NULL default now(),

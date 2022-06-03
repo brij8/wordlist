@@ -10,12 +10,13 @@ export default class Lists extends React.Component {
       listClicked: -1,
       wordClicked: -1
     };
+    this.newList = this.newList.bind(this);
     this.getWords = this.getWords.bind(this);
     this.setClassList = this.setClassList.bind(this);
     this.setClassWord = this.setClassWord.bind(this);
     this.selectWord = this.selectWord.bind(this);
-    // this.deleteList = this.deleteList.bind(this);
-    // this.removeWord = this.removeWord.bind(this);
+    this.deleteList = this.deleteList.bind(this);
+    // this.deleteWord = this.deleteWord.bind(this);
   }
 
   componentDidMount() {
@@ -27,6 +28,19 @@ export default class Lists extends React.Component {
   }
 
   // generate a new list
+  newList() {
+    const req = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' }
+    };
+    fetch('/api/lists', req)
+      .then(response => response.json())
+      .then(makeList => {
+        const allLists = this.state.lists.concat(makeList);
+        this.setState({ lists: allLists });
+      }
+      );
+  }
 
   // get words from selected list
   getWords(listID) {
@@ -37,6 +51,25 @@ export default class Lists extends React.Component {
         this.setState({ showWords: listwords });
       });
   }
+
+  // delete selected list ***IN PROGRESS***
+  deleteList() {
+    const ID = this.state.listClicked;
+    const req = {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' }
+    };
+    fetch('/api/lists/' + ID, req);
+    const findList = list => list.listID === ID;
+    const delList = this.state.lists.findIndex(findList);
+    this.state.lists.splice(delList, 1);
+    this.setState({ showWords: [] });
+  }
+
+  // deleteList(key) {
+  //   // eslint-disable-next-line no-console
+  //   console.log('this.state.listClicked: ', this.state.listClicked);
+  // }
 
   // set class to show list selection
   setClassList(key) {
@@ -59,18 +92,6 @@ export default class Lists extends React.Component {
     console.log('this.state.wordClicked: ', this.state.wordClicked);
   }
 
-  // remove selection
-
-  deleteList(key) {
-    // eslint-disable-next-line no-console
-    console.log('this.state.listClicked: ', this.state.listClicked);
-  }
-
-  removeWord(key) {
-    // eslint-disable-next-line no-console
-    console.log('this.state.wordClicked: ', this.state.wordClicked);
-  }
-
   render() {
     return (
       <div className='py-5 listlist'>
@@ -85,7 +106,7 @@ export default class Lists extends React.Component {
             <div className="listmenu">
               <button type="button" className="newListBtn" onClick={this.newList}>new</button>
               <button type="button" className="editListBtn">edit</button>
-              <button type="button" className="removeListBtn" onClick={this.removeList}>remove</button>
+              <button type="button" className="deleteListBtn" onClick={this.deleteList}>delete</button>
             </div>
             {
               this.state.lists.map(list => (
@@ -99,7 +120,7 @@ export default class Lists extends React.Component {
             <div className="wordmenu">
               <button type="button" className="addWordBtn" onClick={this.addWord}>add</button>
               <button type="button" className="editWordBtn">edit</button>
-              <button type="button" className="removeWordBtn" onClick={this.removeWord}>remove</button>
+              <button type="button" className="deleteWordBtn" onClick={this.deleteWord}>delete</button>
             </div>
             {
               this.state.showWords.map(word => (

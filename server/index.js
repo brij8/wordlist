@@ -116,6 +116,24 @@ app.post('/api/games', (req, res, next) => {
     .catch(err => next(err));
 });
 
+// create new List
+app.post('/api/lists', (req, res, next) => {
+  // v--- will be req.user.userID later ---v
+  const userID = 1;
+  const sql = `
+  insert into "lists" ("userID")
+  values ($1)
+  returning *
+  `;
+  const params = [userID];
+  db.query(sql, params)
+    .then(results => {
+      const nl = results.rows;
+      res.json(nl);
+    })
+    .catch(err => next(err));
+});
+
 // delete a selected game
 app.delete('/api/games/:gameID', (req, res, next) => {
   const gameID = Number(req.params.gameID);
@@ -126,6 +144,20 @@ app.delete('/api/games/:gameID', (req, res, next) => {
     "gameID" = $1
   `;
   const param = [gameID];
+  db.query(sql, param)
+    .catch(err => next(err));
+});
+
+// delete a selected list ***IN PROGRESS***
+app.delete('/api/lists/:listID', (req, res, next) => {
+  const listID = Number(req.params.listID);
+  const sql = `
+  delete from
+    "lists"
+  where
+    "listID" = $1
+  `;
+  const param = [listID];
   db.query(sql, param)
     .catch(err => next(err));
 });
