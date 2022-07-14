@@ -8,7 +8,8 @@ export default class Lists extends React.Component {
       lists: [],
       showWords: [],
       listClicked: -1,
-      wordClicked: -1
+      wordClicked: -1,
+      wordSelected: ''
     };
     this.newList = this.newList.bind(this);
     this.getWords = this.getWords.bind(this);
@@ -17,6 +18,10 @@ export default class Lists extends React.Component {
     this.deleteList = this.deleteList.bind(this);
     this.selectWord = this.selectWord.bind(this);
     this.deleteWord = this.deleteWord.bind(this);
+    this.newWord = this.newWord.bind(this);
+    this.editWord = this.editWord.bind(this);
+    // this.editList = this.editList.bind(this);
+    this.closeModal = this.closeModal.bind(this);
   }
 
   componentDidMount() {
@@ -67,10 +72,11 @@ export default class Lists extends React.Component {
   }
 
   // select a word
-  selectWord(key) {
-    this.setState({ wordClicked: key });
-    // eslint-disable-next-line no-console
-    console.log('this.state.wordClicked: ', this.state.wordClicked);
+  selectWord(wordNum, wordText) {
+    this.setState({ wordClicked: wordNum }
+      // , () => { console.log('this.state.wordClicked: ', this.state.wordClicked); }
+    );
+    this.setState({ wordSelected: wordText });
   }
 
   // delete selected word
@@ -85,6 +91,44 @@ export default class Lists extends React.Component {
     const delWord = this.state.showWords.findIndex(findWord);
     this.state.showWords.splice(delWord, 1);
     this.forceUpdate();
+  }
+
+  // generate a new word
+  newWord() {
+    const list = this.state.listClicked;
+    const req = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        selListID: list
+      })
+    };
+    fetch('/api/listwords/', req)
+      .then(response => response.json())
+      .then(makeWord => {
+        const allWords = this.state.showWords.concat(makeWord);
+        this.setState({ showWords: allWords });
+      }
+      );
+  }
+
+  // EDIT selected WORD ***in progress***
+  editWord() {
+    // open modal
+    const modal = document.querySelector('.modal');
+    modal.style.display = 'block';
+    // focus on modal text input field
+    const input = document.querySelector('#editInput');
+    input.focus();
+    // modal save btn sends sql to update word
+  }
+
+  // EDIT selected LIST
+  // editList()
+
+  closeModal() {
+    const modal = document.querySelector('.modal');
+    modal.style.display = 'none';
   }
 
   // set class to show list selection
@@ -127,17 +171,43 @@ export default class Lists extends React.Component {
           </div>
           <div className="wordbox">
             <div className="wordmenu">
-              <button type="button" className="addWordBtn" onClick={this.addWord}>add</button>
-              <button type="button" className="editWordBtn">edit</button>
+            {/* add word */}
+              <button type="button" className="addWordBtn" onClick={this.newWord}>add</button>
+            {/* edit word */}
+              <button type="button" className="editWordBtn" onClick={this.editWord}>edit</button>
+            {/* delete word */}
               <button type="button" className="deleteWordBtn" onClick={this.deleteWord}>delete</button>
             </div>
             {
               this.state.showWords.map(word => (
                 <div key={word.listWordID} className="list-group-words">
-                  <button type="button" className={this.setClassWord(word.listWordID)} onClick={() => this.selectWord(word.listWordID)}>{word.word}</button>
+                  <button type="button" className={this.setClassWord(word.listWordID)} onClick={() => this.selectWord(word.listWordID, word.word)} onDoubleClick={this.editWord}
+                  >{word.word}</button>
                 </div>
               ))
             }
+          </div>
+        </div>
+        {/* MODAL */}
+        <div className="modal" id="editModal" tabIndex="-1">
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title" id="editModalLabel">Edit Word: {this.state.wordSelected}</h5>
+                <button type="button" className="btn-close" onClick={this.closeModal}></button>
+              </div>
+              <div className="modal-body">
+                <form>
+                  <div className="form-group">
+                    <input type="text" className="form-control" id="editInput" autoFocus></input>
+                  </div>
+                </form>
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-secondary" onClick={this.closeModal}>Close</button>
+                <button type="button" className="btn btn-primary">Save changes</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>

@@ -56,7 +56,7 @@ CREATE TABLE "gamelist" (
 CREATE TABLE "listwords" (
 	"listWordID" serial NOT NULL,
 	"listID" integer NOT NULL,
-	"word" TEXT NOT NULL,
+	"word" TEXT NOT NULL default 'New Word',
 	CONSTRAINT "listWords_pk" PRIMARY KEY ("listWordID")
 ) WITH (
   OIDS=FALSE

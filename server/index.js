@@ -103,7 +103,8 @@ app.post('/api/games', (req, res, next) => {
   // v--- will be req.user.userID later ---v
   const userID = 1;
   const sql = `
-  insert into "games" ("userID")
+  insert into
+    "games" ("userID")
   values ($1)
   returning *
   `;
@@ -121,7 +122,8 @@ app.post('/api/lists', (req, res, next) => {
   // v--- will be req.user.userID later ---v
   const userID = 1;
   const sql = `
-  insert into "lists" ("userID")
+  insert into
+    "lists" ("userID")
   values ($1)
   returning *
   `;
@@ -187,13 +189,25 @@ app.post('/api/gamelist/', (req, res, next) => {
     .catch(err => next(err));
 });
 
-// EDIT selected gameName
-
-// EDIT selected listName
-
-// EDIT selected word
-
 // create new word
+app.post('/api/listwords', (req, res, next) => {
+  // v--- will be req.user.userID later ---v
+  // const userID = 1;
+  const list = Number(req.body.selListID);
+  const sql = `
+  insert into
+    "listwords" ("listID")
+  values ($1)
+  returning *
+  `;
+  const params = [list];
+  db.query(sql, params)
+    .then(results => {
+      const nw = results.rows;
+      res.json(nw);
+    })
+    .catch(err => next(err));
+});
 
 // delete selected word
 app.delete('/api/listwords/:listWordID', (req, res, next) => {
@@ -208,6 +222,12 @@ app.delete('/api/listwords/:listWordID', (req, res, next) => {
   db.query(sql, param)
     .catch(err => next(err));
 });
+
+// EDIT selected gameName
+
+// EDIT selected listName
+
+// EDIT selected word
 
 app.use(errorMiddleware);
 

@@ -78,7 +78,7 @@ export default class Games extends React.Component {
       );
   }
 
-  // rename/edit selected game ***IN PROGESS***
+  // EDIT selected GAME ***IN PROGESS***
   // editGame() {
   //   const ID = this.state.gameClicked;
   //   const req = {
