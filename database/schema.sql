@@ -32,7 +32,7 @@ CREATE TABLE "games" (
 
 
 CREATE TABLE "lists" (
-	"listName" TEXT NOT NULL,
+	"listName" TEXT NOT NULL default 'New List',
 	"listID" serial NOT NULL,
 	"userID" integer NOT NULL,
 	-- "createdAt" DATETIME NOT NULL default now(),
@@ -56,7 +56,7 @@ CREATE TABLE "gamelist" (
 CREATE TABLE "listwords" (
 	"listWordID" serial NOT NULL,
 	"listID" integer NOT NULL,
-	"word" TEXT NOT NULL,
+	"word" TEXT NOT NULL default 'New Word',
 	CONSTRAINT "listWords_pk" PRIMARY KEY ("listWordID")
 ) WITH (
   OIDS=FALSE
