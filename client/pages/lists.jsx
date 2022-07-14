@@ -8,6 +8,7 @@ export default class Lists extends React.Component {
       lists: [],
       showWords: [],
       listClicked: -1,
+      listSelected: '',
       wordClicked: -1,
       wordSelected: ''
     };
@@ -48,6 +49,7 @@ export default class Lists extends React.Component {
   }
 
   // get and show words from selected list
+  // set selected list # and text into state ***in progress***
   getWords(listID) {
     this.setState({ listClicked: listID });
     fetch('/api/listWords/' + listID)
@@ -71,7 +73,7 @@ export default class Lists extends React.Component {
     this.setState({ showWords: [] });
   }
 
-  // select a word
+  // select a word # and text, set in state
   selectWord(wordNum, wordText) {
     this.setState({ wordClicked: wordNum }
       // , () => { console.log('this.state.wordClicked: ', this.state.wordClicked); }
@@ -126,6 +128,7 @@ export default class Lists extends React.Component {
   // EDIT selected LIST
   // editList()
 
+  // close modal, currently only editWordModal
   closeModal() {
     const modal = document.querySelector('.modal');
     modal.style.display = 'none';
