@@ -21,8 +21,11 @@ export default class Lists extends React.Component {
     this.deleteWord = this.deleteWord.bind(this);
     this.newWord = this.newWord.bind(this);
     this.editWord = this.editWord.bind(this);
+    this.saveWord = this.saveWord.bind(this);
     // this.editList = this.editList.bind(this);
     this.closeModal = this.closeModal.bind(this);
+    this.refreshWords = this.refreshWords.bind(this);
+    this.handleEnterKey = this.handleEnterKey.bind(this);
   }
 
   componentDidMount() {
@@ -52,6 +55,16 @@ export default class Lists extends React.Component {
   // set selected list # and text into state ***in progress***
   getWords(listID) {
     this.setState({ listClicked: listID });
+    this.setState({ wordSelected: '' });
+    fetch('/api/listWords/' + listID)
+      .then(response => response.json())
+      .then(listwords => {
+        this.setState({ showWords: listwords });
+      });
+  }
+
+  // refresh showWords after editing a word, used in saveWord()
+  refreshWords(listID) {
     fetch('/api/listWords/' + listID)
       .then(response => response.json())
       .then(listwords => {
@@ -114,7 +127,7 @@ export default class Lists extends React.Component {
       );
   }
 
-  // EDIT selected WORD ***in progress***
+  // EDIT selected WORD
   editWord() {
     // open modal
     const modal = document.querySelector('.modal');
@@ -122,13 +135,46 @@ export default class Lists extends React.Component {
     // focus on modal text input field
     const input = document.querySelector('#editInput');
     input.focus();
-    // modal save btn sends sql to update word
   }
 
+  // SAVE edited word
+  saveWord() {
+    // modal save btn sends sql to update word
+    const newWord = document.querySelector('#editInput').value;
+    const ID = this.state.wordClicked;
+    const req = {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        editInput: newWord,
+        listWordID: ID
+      })
+    };
+    fetch('api/listwords/:listWordID', req)
+      .then(response => response.json())
+      .then(res => {
+        const listID = res[0].listID;
+        this.refreshWords(listID);
+      });
+    this.closeModal();
+  }
+
+  // pressing Enter Key in modal input field uses saveWord()
+  handleEnterKey(e) {
+    if (e.key === 'Enter' || e.which === 13) {
+      this.saveWord();
+    }
+  }
+
+  // Stupid Bonus Function Just To Clear Input Field
+  sbfjtcif() {
+    const inputField = document.querySelector('#editInput');
+    inputField.value = '';
+  }
   // EDIT selected LIST
   // editList()
 
-  // close modal, currently only editWordModal
+  // close modal, currently only editWordModal (editGame & editList to come)
   closeModal() {
     const modal = document.querySelector('.modal');
     modal.style.display = 'none';
@@ -196,19 +242,19 @@ export default class Lists extends React.Component {
           <div className="modal-dialog">
             <div className="modal-content">
               <div className="modal-header">
-                <h5 className="modal-title" id="editModalLabel">Edit Word: {this.state.wordSelected}</h5>
+                <h5 className="modal-title" id="editModalLabel">Edit: {this.state.wordSelected}</h5>
                 <button type="button" className="btn-close" onClick={this.closeModal}></button>
               </div>
               <div className="modal-body">
                 <form>
                   <div className="form-group">
-                    <input type="text" className="form-control" id="editInput" autoFocus></input>
+                    <input type="text" onKeyPress={this.handleEnterKey} className="form-control" id="editInput" autoFocus onFocus={this.sbfjtcif}></input>
                   </div>
                 </form>
               </div>
               <div className="modal-footer">
                 <button type="button" className="btn btn-secondary" onClick={this.closeModal}>Close</button>
-                <button type="button" className="btn btn-primary">Save changes</button>
+                <button type="button" id="saveBtn" className="btn btn-primary" onClick={this.saveWord}>Save changes</button>
               </div>
             </div>
           </div>
