@@ -242,7 +242,7 @@ export default class Lists extends React.Component {
               <div className="modal-body">
                 <form>
                   <div className="form-group">
-                    <input type="text" onKeyPress={this.handleEnterKey} className="form-control" id="editInput" autoFocus onFocus={this.sbfjtcif}></input>
+                    <input type="text" onKeyPress={this.handleEnterKey} className="form-control" id="editInput" autoFocus></input>
                   </div>
                 </form>
               </div>
