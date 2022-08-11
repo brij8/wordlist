@@ -52,7 +52,6 @@ export default class Lists extends React.Component {
   }
 
   // get and show words from selected list
-  // set selected list # and text into state ***in progress***
   getWords(listID) {
     this.setState({ listClicked: listID });
     this.setState({ wordSelected: '' });
@@ -89,7 +88,6 @@ export default class Lists extends React.Component {
   // select a word # and text, set in state
   selectWord(wordNum, wordText) {
     this.setState({ wordClicked: wordNum }
-      // , () => { console.log('this.state.wordClicked: ', this.state.wordClicked); }
     );
     this.setState({ wordSelected: wordText });
   }
@@ -135,6 +133,7 @@ export default class Lists extends React.Component {
     // focus on modal text input field
     const input = document.querySelector('#editInput');
     input.focus();
+    input.value = '';
   }
 
   // SAVE edited word
@@ -166,11 +165,6 @@ export default class Lists extends React.Component {
     }
   }
 
-  // Stupid Bonus Function Just To Clear Input Field
-  sbfjtcif() {
-    const inputField = document.querySelector('#editInput');
-    inputField.value = '';
-  }
   // EDIT selected LIST
   // editList()
 
@@ -248,7 +242,7 @@ export default class Lists extends React.Component {
               <div className="modal-body">
                 <form>
                   <div className="form-group">
-                    <input type="text" onKeyPress={this.handleEnterKey} className="form-control" id="editInput" autoFocus onFocus={this.sbfjtcif}></input>
+                    <input type="text" onKeyPress={this.handleEnterKey} className="form-control" id="editInput" autoFocus></input>
                   </div>
                 </form>
               </div>
