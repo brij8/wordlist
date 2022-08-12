@@ -12,6 +12,10 @@ export default class Lists extends React.Component {
       wordClicked: -1,
       wordSelected: ''
     };
+
+    this.wordModal = React.createRef();
+    this.editWordInput = React.createRef();
+
     this.newList = this.newList.bind(this);
     this.getWords = this.getWords.bind(this);
     this.setClassList = this.setClassList.bind(this);
@@ -85,7 +89,7 @@ export default class Lists extends React.Component {
     this.setState({ showWords: [] });
   }
 
-  // select a word # and text, set in state
+  // select a words # and string, set in state
   selectWord(wordNum, wordText) {
     this.setState({ wordClicked: wordNum }
     );
@@ -125,21 +129,18 @@ export default class Lists extends React.Component {
       );
   }
 
-  // EDIT selected WORD
+  // EDIT selected WORD; open modal, focus on it, clear prev input
+  // *****refactoring to refs in progress*****
   editWord() {
-    // open modal
-    const modal = document.querySelector('.modal');
-    modal.style.display = 'block';
-    // focus on modal text input field
-    const input = document.querySelector('#editInput');
-    input.focus();
-    input.value = '';
+    this.wordModal.current.style.display = 'block';
+    this.editWordInput.current.value = '';
+    this.editWordInput.current.focus();
   }
 
-  // SAVE edited word
+  // SAVE edited word; sends SQL update, then refreshes showWords with res
   saveWord() {
     // modal save btn sends sql to update word
-    const newWord = document.querySelector('#editInput').value;
+    const newWord = this.editWordInput.current.value;
     const ID = this.state.wordClicked;
     const req = {
       method: 'PUT',
@@ -158,7 +159,7 @@ export default class Lists extends React.Component {
     this.closeModal();
   }
 
-  // pressing Enter Key in modal input field uses saveWord()
+  // Enter onKeyPress() in word-modal input field uses saveWord()
   handleEnterKey(e) {
     if (e.key === 'Enter' || e.which === 13) {
       this.saveWord();
@@ -168,10 +169,11 @@ export default class Lists extends React.Component {
   // EDIT selected LIST
   // editList()
 
-  // close modal, currently only editWordModal (editGame & editList to come)
+  // close modal, currently only wordModal (gameModal & listModal to come)
   closeModal() {
-    const modal = document.querySelector('.modal');
-    modal.style.display = 'none';
+    this.wordModal.current.style.display = 'none';
+    // this.gameModal.current.style.display = 'none';
+    // this.listModal.current.style.display = 'none';
   }
 
   // set class to show list selection
@@ -231,8 +233,8 @@ export default class Lists extends React.Component {
             }
           </div>
         </div>
-        {/* MODAL */}
-        <div className="modal" id="editModal" tabIndex="-1">
+        {/* EDIT WORD MODAL */}
+        <div className="modal" ref={this.wordModal} id="editModal" tabIndex="-1">
           <div className="modal-dialog">
             <div className="modal-content">
               <div className="modal-header">
@@ -242,7 +244,7 @@ export default class Lists extends React.Component {
               <div className="modal-body">
                 <form>
                   <div className="form-group">
-                    <input type="text" onKeyPress={this.handleEnterKey} className="form-control" id="editInput" autoFocus></input>
+                    <input type="text" ref={this.editWordInput} onKeyPress={this.handleEnterKey} className="form-control" id="editInput" autoFocus></input>
                   </div>
                 </form>
               </div>

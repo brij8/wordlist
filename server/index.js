@@ -227,7 +227,7 @@ app.delete('/api/listwords/:listWordID', (req, res, next) => {
 
 // SAVE edited listName
 
-// SAVE edited word ***IN PROGRESS***
+// SAVE edited word
 app.put('/api/listwords/:listWordID', (req, res, next) => {
   const wordID = Number(req.body.listWordID);
   const newText = req.body.editInput;
