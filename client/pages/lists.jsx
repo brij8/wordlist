@@ -91,8 +91,7 @@ export default class Lists extends React.Component {
 
   // select a words # and string, set in state
   selectWord(wordNum, wordText) {
-    this.setState({ wordClicked: wordNum }
-    );
+    this.setState({ wordClicked: wordNum });
     this.setState({ wordSelected: wordText });
   }
 
@@ -130,16 +129,14 @@ export default class Lists extends React.Component {
   }
 
   // EDIT selected WORD; open modal, focus on it, clear prev input
-  // *****refactoring to refs in progress*****
   editWord() {
     this.wordModal.current.style.display = 'block';
-    this.editWordInput.current.value = '';
     this.editWordInput.current.focus();
+    this.editWordInput.current.value = '';
   }
 
   // SAVE edited word; sends SQL update, then refreshes showWords with res
   saveWord() {
-    // modal save btn sends sql to update word
     const newWord = this.editWordInput.current.value;
     const ID = this.state.wordClicked;
     const req = {
