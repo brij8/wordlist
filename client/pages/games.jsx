@@ -13,6 +13,14 @@ export default class Games extends React.Component {
       listClicked: -1,
       wordClicked: -1
     };
+
+    // this.wordModal = React.createRef();
+    // this.editWordInput = React.createRef();
+    // this.listModal = React.createRef();
+    // this.editListInput = React.createRef();
+    // this.gameModal = React.createRef();
+    // this.editGameInput = React.createRef();
+
     this.newGame = this.newGame.bind(this);
     this.getGameLists = this.getGameLists.bind(this);
     this.getWords = this.getWords.bind(this);
