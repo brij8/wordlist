@@ -13,23 +13,29 @@ export default class Lists extends React.Component {
       wordSelected: ''
     };
 
+    this.getWords = this.getWords.bind(this);
+    this.selectWord = this.selectWord.bind(this);
+    this.setClassList = this.setClassList.bind(this);
+    this.setClassWord = this.setClassWord.bind(this);
+
+    this.newWord = this.newWord.bind(this);
+    this.editWord = this.editWord.bind(this);
+    this.saveWord = this.saveWord.bind(this);
+    this.deleteWord = this.deleteWord.bind(this);
     this.wordModal = React.createRef();
     this.editWordInput = React.createRef();
 
     this.newList = this.newList.bind(this);
-    this.getWords = this.getWords.bind(this);
-    this.setClassList = this.setClassList.bind(this);
-    this.setClassWord = this.setClassWord.bind(this);
+    this.editList = this.editList.bind(this);
+    this.saveList = this.saveList.bind(this);
     this.deleteList = this.deleteList.bind(this);
-    this.selectWord = this.selectWord.bind(this);
-    this.deleteWord = this.deleteWord.bind(this);
-    this.newWord = this.newWord.bind(this);
-    this.editWord = this.editWord.bind(this);
-    this.saveWord = this.saveWord.bind(this);
-    // this.editList = this.editList.bind(this);
+    this.listModal = React.createRef();
+    this.editListInput = React.createRef();
+
     this.closeModal = this.closeModal.bind(this);
     this.refreshWords = this.refreshWords.bind(this);
-    this.handleEnterKey = this.handleEnterKey.bind(this);
+    this.saveWordEnterKey = this.saveWordEnterKey.bind(this);
+    this.saveListEnterKey = this.saveListEnterKey.bind(this);
   }
 
   componentDidMount() {
@@ -56,7 +62,8 @@ export default class Lists extends React.Component {
   }
 
   // get and show words from selected list
-  getWords(listID) {
+  getWords(listID, listName) {
+    this.setState({ listSelected: listName });
     this.setState({ listClicked: listID });
     this.setState({ wordSelected: '' });
     fetch('/api/listWords/' + listID)
@@ -72,6 +79,16 @@ export default class Lists extends React.Component {
       .then(response => response.json())
       .then(listwords => {
         this.setState({ showWords: listwords });
+      });
+  }
+
+  // refresh state.lists[] after editing a listName, used in saveList()
+  // will eventually want userID to pull users lists
+  refreshLists() {
+    fetch('/api/lists')
+      .then(res => res.json())
+      .then(lists => {
+        this.setState({ lists });
       });
   }
 
@@ -157,20 +174,48 @@ export default class Lists extends React.Component {
   }
 
   // Enter onKeyPress() in word-modal input field uses saveWord()
-  handleEnterKey(e) {
+  saveWordEnterKey(e) {
     if (e.key === 'Enter' || e.which === 13) {
       this.saveWord();
     }
   }
 
-  // EDIT selected LIST
-  // editList()
+  // EDIT selected LIST; open modal, focus on it, clear prev input
+  editList() {
+    this.listModal.current.style.display = 'block';
+    this.editListInput.current.focus();
+    this.editListInput.current.value = '';
+  }
+
+  // SAVE edited LIST
+  saveList() {
+    const newLName = this.editListInput.current.value;
+    const ID = this.state.listClicked;
+    const req = {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        editInput: newLName,
+        listID: ID
+      })
+    };
+    fetch('api/lists/:listID', req);
+    this.refreshLists();
+    this.closeModal();
+  }
+
+  // Enter onKeyPress() in list-modal input field uses saveList()
+  saveListEnterKey(e) {
+    if (e.key === 'Enter' || e.which === 13) {
+      this.saveList();
+    }
+  }
 
   // close modal, currently only wordModal (gameModal & listModal to come)
   closeModal() {
     this.wordModal.current.style.display = 'none';
     // this.gameModal.current.style.display = 'none';
-    // this.listModal.current.style.display = 'none';
+    this.listModal.current.style.display = 'none';
   }
 
   // set class to show list selection
@@ -199,21 +244,24 @@ export default class Lists extends React.Component {
         <div className="boxbox">
           <div className="listbox">
             <div className="listmenu">
+              {/* make new list */}
               <button type="button" className="newListBtn" onClick={this.newList}>new</button>
-              <button type="button" className="editListBtn">edit</button>
+              {/* edit list */}
+              <button type="button" className="editListBtn" onClick={this.editList}>edit</button>
+              {/* delete list */}
               <button type="button" className="deleteListBtn" onClick={this.deleteList}>delete</button>
             </div>
             {
               this.state.lists.map(list => (
                 <div key={list.listID} className="list-group-lists">
-                  <button type="button" className={this.setClassList(list.listID)} onClick={() => this.getWords(list.listID)}>{list.listName}</button>
+                  <button type="button" className={this.setClassList(list.listID)} onClick={() => this.getWords(list.listID, list.listName)} onDoubleClick={this.editList}>{list.listName}</button>
                 </div>
               ))
             }
           </div>
           <div className="wordbox">
             <div className="wordmenu">
-            {/* add word */}
+            {/* add new word */}
               <button type="button" className="addWordBtn" onClick={this.newWord}>add</button>
             {/* edit word */}
               <button type="button" className="editWordBtn" onClick={this.editWord}>edit</button>
@@ -241,13 +289,35 @@ export default class Lists extends React.Component {
               <div className="modal-body">
                 <form>
                   <div className="form-group">
-                    <input type="text" ref={this.editWordInput} onKeyPress={this.handleEnterKey} className="form-control" id="editInput" autoFocus></input>
+                    <input type="text" ref={this.editWordInput} onKeyPress={this.saveWordEnterKey} className="form-control" id="editInput" autoFocus></input>
                   </div>
                 </form>
               </div>
               <div className="modal-footer">
                 <button type="button" className="btn btn-secondary" onClick={this.closeModal}>Close</button>
                 <button type="button" id="saveBtn" className="btn btn-primary" onClick={this.saveWord}>Save changes</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        {/* EDIT LIST MODAL */}
+        <div className="modal" ref={this.listModal} id="editListModal" tabIndex="-1">
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title" id="editListModalLabel">Edit: {this.state.listSelected}</h5>
+                <button type="button" className="btn-close" onClick={this.closeModal}></button>
+              </div>
+              <div className="modal-body">
+                <form>
+                  <div className="form-group">
+                    <input type="text" ref={this.editListInput} onKeyPress={this.saveListEnterKey} className="form-control" id="editListInput" autoFocus></input>
+                  </div>
+                </form>
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-secondary" onClick={this.closeModal}>Close</button>
+                <button type="button" id="saveListBtn" className="btn btn-primary" onClick={this.saveList}>Save changes</button>
               </div>
             </div>
           </div>
