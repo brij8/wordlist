@@ -223,10 +223,6 @@ app.delete('/api/listwords/:listWordID', (req, res, next) => {
     .catch(err => next(err));
 });
 
-// SAVE edited gameName
-
-// SAVE edited listName
-
 // SAVE edited word
 app.put('/api/listwords/:listWordID', (req, res, next) => {
   const wordID = Number(req.body.listWordID);
@@ -247,6 +243,25 @@ app.put('/api/listwords/:listWordID', (req, res, next) => {
     })
     .catch(err => next(err));
 });
+
+// SAVE edited listName
+app.put('/api/lists/:listID', (req, res, next) => {
+  const listID = Number(req.body.listID);
+  const newLName = req.body.editInput;
+  const sql = `
+  update
+    "lists"
+  set "listName" = $1
+  where
+    "listID" = $2
+  returning *
+  `;
+  const param = [newLName, listID];
+  db.query(sql, param)
+    .catch(err => next(err));
+});
+
+// SAVE edited gameName
 
 app.use(errorMiddleware);
 
