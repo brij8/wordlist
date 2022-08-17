@@ -13,6 +13,11 @@ export default class Lists extends React.Component {
       wordSelected: ''
     };
 
+    this.wordModal = React.createRef();
+    this.editWordInput = React.createRef();
+    this.listModal = React.createRef();
+    this.editListInput = React.createRef();
+
     this.getWords = this.getWords.bind(this);
     this.selectWord = this.selectWord.bind(this);
     this.setClassList = this.setClassList.bind(this);
@@ -22,15 +27,11 @@ export default class Lists extends React.Component {
     this.editWord = this.editWord.bind(this);
     this.saveWord = this.saveWord.bind(this);
     this.deleteWord = this.deleteWord.bind(this);
-    this.wordModal = React.createRef();
-    this.editWordInput = React.createRef();
 
     this.newList = this.newList.bind(this);
     this.editList = this.editList.bind(this);
     this.saveList = this.saveList.bind(this);
     this.deleteList = this.deleteList.bind(this);
-    this.listModal = React.createRef();
-    this.editListInput = React.createRef();
 
     this.closeModal = this.closeModal.bind(this);
     this.refreshWords = this.refreshWords.bind(this);
@@ -155,21 +156,23 @@ export default class Lists extends React.Component {
   // SAVE edited word; sends SQL update, then refreshes showWords with res
   saveWord() {
     const newWord = this.editWordInput.current.value;
-    const ID = this.state.wordClicked;
-    const req = {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        editInput: newWord,
-        listWordID: ID
-      })
-    };
-    fetch('api/listwords/:listWordID', req)
-      .then(response => response.json())
-      .then(res => {
-        const listID = res[0].listID;
-        this.refreshWords(listID);
-      });
+    if (newWord !== '') {
+      const ID = this.state.wordClicked;
+      const req = {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          editInput: newWord,
+          listWordID: ID
+        })
+      };
+      fetch('api/listwords/:listWordID', req)
+        .then(response => response.json())
+        .then(res => {
+          const listID = res[0].listID;
+          this.refreshWords(listID);
+        });
+    }
     this.closeModal();
   }
 
@@ -190,17 +193,19 @@ export default class Lists extends React.Component {
   // SAVE edited LIST
   saveList() {
     const newLName = this.editListInput.current.value;
-    const ID = this.state.listClicked;
-    const req = {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        editInput: newLName,
-        listID: ID
-      })
-    };
-    fetch('api/lists/:listID', req);
-    this.refreshLists();
+    if (newLName !== '') {
+      const ID = this.state.listClicked;
+      const req = {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          editInput: newLName,
+          listID: ID
+        })
+      };
+      fetch('api/lists/:listID', req);
+      this.refreshLists();
+    }
     this.closeModal();
   }
 
@@ -214,7 +219,6 @@ export default class Lists extends React.Component {
   // close modal, currently only wordModal (gameModal & listModal to come)
   closeModal() {
     this.wordModal.current.style.display = 'none';
-    // this.gameModal.current.style.display = 'none';
     this.listModal.current.style.display = 'none';
   }
 
