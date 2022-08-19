@@ -13,10 +13,12 @@ h5 {
 
 .navbar-nav {
   flex-direction: row;
+  padding-top: 0.9rem;
 }
 
 .navbar-brand {
   padding-left: 0.25rem;
+  font-size: 2rem;
 }
 
 .nav-item {
