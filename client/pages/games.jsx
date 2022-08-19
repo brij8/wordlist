@@ -10,14 +10,12 @@ export default class Games extends React.Component {
       showLists: [],
       showWords: [],
       gameClicked: -1,
+      gameSelected: '',
       listClicked: -1,
+      listSelected: '',
       wordClicked: -1
     };
 
-    // this.wordModal = React.createRef();
-    // this.editWordInput = React.createRef();
-    // this.listModal = React.createRef();
-    // this.editListInput = React.createRef();
     // this.gameModal = React.createRef();
     // this.editGameInput = React.createRef();
 
@@ -32,7 +30,6 @@ export default class Games extends React.Component {
     this.deleteGame = this.deleteGame.bind(this);
     this.addList = this.addList.bind(this);
     this.removeList = this.removeList.bind(this);
-    this.removeWord = this.removeWord.bind(this);
   }
 
   componentDidMount() {
@@ -145,11 +142,6 @@ export default class Games extends React.Component {
     console.log('this.state.listClicked: ', this.state.listClicked);
   }
 
-  removeWord(key) {
-    // eslint-disable-next-line no-console
-    console.log('this.state.wordClicked: ', this.state.wordClicked);
-  }
-
   // ---------selection styling----------------
   // set class to show game selection
   setClassGame(key) {
@@ -205,10 +197,8 @@ export default class Games extends React.Component {
         </div>
         <div className="listbox">
           <div className="listmenu">
-            <button type="button" className="newListBtn" onClick={this.newList}>new</button>
-            <button type="button" className="editListBtn">edit</button>
-            <button type="button" className="removeListBtn" onClick={this.removeList}>remove</button>
             <button type="button" className="addListBtn" onClick={this.addList}>add</button>
+            <button type="button" className="removeListBtn" onClick={this.removeList}>remove</button>
           </div>
           <div className="sel-game-lists">
           {// show lists of selected game
@@ -231,9 +221,7 @@ export default class Games extends React.Component {
           </div>
           <div className="wordbox">
             <div className="wordmenu">
-              <button type="button" className="addWordBtn" onClick={this.addWord}>add</button>
-              <button type="button" className="editWordBtn">edit</button>
-              <button type="button" className="removeWordBtn" onClick={this.removeWord}>remove</button>
+              <h5>All words in: (this.listSelected)</h5>
             </div>
             {
               this.state.showWords.map(word => (
