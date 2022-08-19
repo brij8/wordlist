@@ -6,8 +6,27 @@ h1 {
   color: #6c9eea;
 }
 
-h2 {
+h2,
+h5 {
   color: #c4c4c4;
+}
+
+.navbar-nav {
+  flex-direction: row;
+  padding-top: 0.9rem;
+}
+
+.navbar-brand {
+  padding-left: 0.25rem;
+  font-size: 2rem;
+}
+
+.nav-item {
+  padding-right: 1rem;
+}
+
+.nav-text {
+  padding-left: 1rem;
 }
 
 .container {
