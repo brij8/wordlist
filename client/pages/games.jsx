@@ -49,6 +49,8 @@ export default class Games extends React.Component {
   getGameLists(gameID) {
     this.setState({ gameClicked: gameID });
     this.setState({ showWords: [] });
+    this.setState({ listSelected: '' });
+    this.setState({ listClicked: -1 });
     fetch('/api/gamelist/' + gameID)
       .then(response => response.json())
       .then(gameLists => {
@@ -221,7 +223,7 @@ export default class Games extends React.Component {
           </div>
           <div className="wordbox">
             <div className="wordmenu">
-              <h5>All words in: (this.listSelected)</h5>
+              <h5 className="words-label">All words in: (this.listSelected)</h5>
             </div>
             {
               this.state.showWords.map(word => (
