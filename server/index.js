@@ -189,6 +189,23 @@ app.post('/api/gamelist/', (req, res, next) => {
     .catch(err => next(err));
 });
 
+// remove list from game
+app.delete('/api/gamelist/', (req, res, next) => {
+  const gameID = Number(req.body.selGameID);
+  const listID = Number(req.body.selListID);
+  const sql = `
+  delete from
+    "gamelist"
+  where
+    "gameID" = $1
+  and
+    "listID" = $2
+  `;
+  const param = [gameID, listID];
+  db.query(sql, param)
+    .catch(err => next(err));
+});
+
 // create new word
 app.post('/api/listwords', (req, res, next) => {
   // v--- will be req.user.userID later ---v
