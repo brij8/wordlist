@@ -60,8 +60,6 @@ export default class Games extends React.Component {
 
   // get words from selected list
   getWords(listID) {
-    // eslint-disable-next-line no-console
-    console.log('list selected: ', listID);
     this.setState({ listClicked: listID });
     fetch('/api/listWords/' + listID)
       .then(response => response.json())
@@ -132,16 +130,28 @@ export default class Games extends React.Component {
       );
   }
 
-  // select a word
-  selectWord(key) {
-    // eslint-disable-next-line no-console
-    console.log('word selected: ', key);
-    this.setState({ wordClicked: key });
+  // remove list from game
+  removeList(key) {
+    const gameID = Number(this.state.gameClicked);
+    const listID = Number(this.state.listClicked);
+    const req = {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        selGameID: gameID,
+        selListID: listID
+      })
+    };
+    fetch('/api/gamelist/', req);
+    const findList = list => list.listID === listID;
+    const delList = this.state.showLists.findIndex(findList);
+    this.state.showLists.splice(delList, 1);
+    this.forceUpdate();
   }
 
-  removeList(key) {
-    // eslint-disable-next-line no-console
-    console.log('this.state.listClicked: ', this.state.listClicked);
+  // select a word
+  selectWord(key) {
+    this.setState({ wordClicked: key });
   }
 
   // ---------selection styling----------------
