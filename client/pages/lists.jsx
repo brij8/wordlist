@@ -216,7 +216,7 @@ export default class Lists extends React.Component {
     }
   }
 
-  // close modal, currently only wordModal (gameModal & listModal to come)
+  // close modal
   closeModal() {
     this.wordModal.current.style.display = 'none';
     this.listModal.current.style.display = 'none';
