@@ -91,7 +91,6 @@ export default class Games extends React.Component {
       );
   }
 
-  // *** IN PROGRESS ***
   // Enter onKeyPress() in game-modal input field uses saveGame()
   saveGameEnterKey(e) {
     if (e.key === 'Enter' || e.which === 13) {
@@ -109,7 +108,7 @@ export default class Games extends React.Component {
   // refresh state.games[] after editing a gameName, used in saveGame()
   // will eventually want userID to pull users games
   refreshGames() {
-    fetch('/api/gamelist')
+    fetch('/api/games')
       .then(res => res.json())
       .then(games => {
         this.setState({ games });
@@ -120,7 +119,7 @@ export default class Games extends React.Component {
   saveGame() {
     const newGName = this.editGameInput.current.value;
     if (newGName !== '') {
-      const ID = this.state.gameClicked;
+      const ID = Number(this.state.gameClicked);
       const req = {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -129,7 +128,7 @@ export default class Games extends React.Component {
           gameID: ID
         })
       };
-      fetch('api/gamelist/:gameID', req);
+      fetch('api/games/:gameID', req);
       this.refreshGames();
     }
     this.closeModal();
