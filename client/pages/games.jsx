@@ -19,23 +19,26 @@ export default class Games extends React.Component {
     this.gameModal = React.createRef();
     this.editGameInput = React.createRef();
 
-    this.newGame = this.newGame.bind(this);
-    this.getGameLists = this.getGameLists.bind(this);
-    this.getWords = this.getWords.bind(this);
     this.setClassGame = this.setClassGame.bind(this);
     this.setClassList = this.setClassList.bind(this);
     this.setClassShowList = this.setClassShowList.bind(this);
     this.setClassWord = this.setClassWord.bind(this);
-    this.selectWord = this.selectWord.bind(this);
-    this.deleteGame = this.deleteGame.bind(this);
-    this.addList = this.addList.bind(this);
-    this.removeList = this.removeList.bind(this);
 
+    this.getWords = this.getWords.bind(this);
+    this.selectWord = this.selectWord.bind(this);
+
+    this.newGame = this.newGame.bind(this);
     this.editGame = this.editGame.bind(this);
     this.saveGame = this.saveGame.bind(this);
+    this.deleteGame = this.deleteGame.bind(this);
+
     this.saveGameEnterKey = this.saveGameEnterKey.bind(this);
+    this.getGameLists = this.getGameLists.bind(this);
     this.refreshGames = this.refreshGames.bind(this);
     this.closeModal = this.closeModal.bind(this);
+
+    this.addList = this.addList.bind(this);
+    this.removeList = this.removeList.bind(this);
   }
 
   componentDidMount() {
@@ -91,7 +94,6 @@ export default class Games extends React.Component {
       );
   }
 
-  // *** IN PROGRESS ***
   // Enter onKeyPress() in game-modal input field uses saveGame()
   saveGameEnterKey(e) {
     if (e.key === 'Enter' || e.which === 13) {
@@ -109,7 +111,7 @@ export default class Games extends React.Component {
   // refresh state.games[] after editing a gameName, used in saveGame()
   // will eventually want userID to pull users games
   refreshGames() {
-    fetch('/api/gamelist')
+    fetch('/api/games')
       .then(res => res.json())
       .then(games => {
         this.setState({ games });
@@ -120,7 +122,7 @@ export default class Games extends React.Component {
   saveGame() {
     const newGName = this.editGameInput.current.value;
     if (newGName !== '') {
-      const ID = this.state.gameClicked;
+      const ID = Number(this.state.gameClicked);
       const req = {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -129,7 +131,7 @@ export default class Games extends React.Component {
           gameID: ID
         })
       };
-      fetch('api/gamelist/:gameID', req);
+      fetch('api/games/:gameID', req);
       this.refreshGames();
     }
     this.closeModal();
