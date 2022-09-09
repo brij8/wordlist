@@ -278,7 +278,22 @@ app.put('/api/lists/:listID', (req, res, next) => {
     .catch(err => next(err));
 });
 
-// SAVE edited gameName
+// SAVE edited gameName ***IN PROGRESS***
+// app.put('/api/lists/:listID', (req, res, next) => {
+//   const listID = Number(req.body.listID);
+//   const newLName = req.body.editInput;
+//   const sql = `
+//   update
+//     "lists"
+//   set "listName" = $1
+//   where
+//     "listID" = $2
+//   returning *
+//   `;
+//   const param = [newLName, listID];
+//   db.query(sql, param)
+//     .catch(err => next(err));
+// });
 
 app.use(errorMiddleware);
 

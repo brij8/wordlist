@@ -16,8 +16,8 @@ export default class Games extends React.Component {
       wordClicked: -1
     };
 
-    // this.gameModal = React.createRef();
-    // this.editGameInput = React.createRef();
+    this.gameModal = React.createRef();
+    this.editGameInput = React.createRef();
 
     this.newGame = this.newGame.bind(this);
     this.getGameLists = this.getGameLists.bind(this);
@@ -30,6 +30,12 @@ export default class Games extends React.Component {
     this.deleteGame = this.deleteGame.bind(this);
     this.addList = this.addList.bind(this);
     this.removeList = this.removeList.bind(this);
+
+    this.editGame = this.editGame.bind(this);
+    this.saveGame = this.saveGame.bind(this);
+    this.saveGameEnterKey = this.saveGameEnterKey.bind(this);
+    this.refreshGames = this.refreshGames.bind(this);
+    this.closeModal = this.closeModal.bind(this);
   }
 
   componentDidMount() {
@@ -46,7 +52,8 @@ export default class Games extends React.Component {
   }
 
   // get lists from selected game
-  getGameLists(gameID) {
+  getGameLists(gameID, gameName) {
+    this.setState({ gameSelected: gameName });
     this.setState({ gameClicked: gameID });
     this.setState({ showWords: [] });
     this.setState({ listSelected: '' });
@@ -59,8 +66,9 @@ export default class Games extends React.Component {
   }
 
   // get words from selected list
-  getWords(listID) {
+  getWords(listID, listName) {
     this.setState({ listClicked: listID });
+    this.setState({ listSelected: listName });
     fetch('/api/listWords/' + listID)
       .then(response => response.json())
       .then(listwords => {
@@ -83,15 +91,54 @@ export default class Games extends React.Component {
       );
   }
 
-  // EDIT selected GAME ***IN PROGESS***
-  // editGame() {
-  //   const ID = this.state.gameClicked;
-  //   const req = {
-  //     method: 'UPDATE',
-  //     headers: { 'Content-Type': 'application/json' }
-  //   };
-  //   fetch('api/games/' + ID, req);
-  // }
+  // *** IN PROGRESS ***
+  // Enter onKeyPress() in game-modal input field uses saveGame()
+  saveGameEnterKey(e) {
+    if (e.key === 'Enter' || e.which === 13) {
+      this.saveGame();
+    }
+  }
+
+  // EDIT selected GAME; open modal, focus on it, clear prev input
+  editGame() {
+    this.gameModal.current.style.display = 'block';
+    this.editGameInput.current.focus();
+    this.editGameInput.current.value = '';
+  }
+
+  // refresh state.games[] after editing a gameName, used in saveGame()
+  // will eventually want userID to pull users games
+  refreshGames() {
+    fetch('/api/gamelist')
+      .then(res => res.json())
+      .then(games => {
+        this.setState({ games });
+      });
+  }
+
+  // SAVE edited GAME
+  saveGame() {
+    const newGName = this.editGameInput.current.value;
+    if (newGName !== '') {
+      const ID = this.state.gameClicked;
+      const req = {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          editInput: newGName,
+          gameID: ID
+        })
+      };
+      fetch('api/gamelist/:gameID', req);
+      this.refreshGames();
+    }
+    this.closeModal();
+  }
+
+  // close modal
+  closeModal() {
+    this.gameModal.current.style.display = 'none';
+  }
 
   // delete selected game
   deleteGame() {
@@ -196,13 +243,13 @@ export default class Games extends React.Component {
         <div className="gamebox">
           <div className="gamemenu">
             <button type="button" className="newGameBtn" onClick={this.newGame}>new</button>
-            <button type="button" className="editGameBtn">edit</button>
+            <button type="button" className="editGameBtn" onClick={this.editGame}>edit</button>
             <button type="button" className="deleteGameBtn" onClick={this.deleteGame}>delete</button>
           </div>
         { // show users games
           this.state.games.map(game => (
             <div key={game.gameID} className="list-group-games">
-              <button type="button" className={this.setClassGame(game.gameID)} onClick={() => this.getGameLists(game.gameID)}>{game.gameName}</button>
+              <button type="button" className={this.setClassGame(game.gameID)} onClick={() => this.getGameLists(game.gameID, game.gameName)} onDoubleClick={this.editGame}>{game.gameName}</button>
             </div>
           ))
         }
@@ -225,7 +272,7 @@ export default class Games extends React.Component {
           { // show all users lists
             this.state.lists.map(list => (
               <div key={list.listID} className="list-group-lists">
-                <button type="button" className={this.setClassList(list.listID)} onClick={() => this.getWords(list.listID)}>{list.listName}</button>
+                <button type="button" className={this.setClassList(list.listID)} onClick={() => this.getWords(list.listID, list.listName)}>{list.listName}</button>
               </div>
             ))
           }
@@ -233,7 +280,7 @@ export default class Games extends React.Component {
           </div>
           <div className="wordbox">
             <div className="wordmenu">
-              <h5 className="words-label">All words in: (this.listSelected)</h5>
+              <h5 className="words-label" id="word-label">## words in: this.state.listSelected</h5>
             </div>
             {
               this.state.showWords.map(word => (
@@ -242,6 +289,28 @@ export default class Games extends React.Component {
                 </div>
               ))
             }
+          </div>
+        </div>
+      {/* EDIT GAME MODAL */}
+        <div className="modal" ref={this.gameModal} id="editModal" tabIndex="-1">
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title" id="editModalLabel">Edit: {this.state.gameSelected}</h5>
+                <button type="button" className="btn-close" onClick={this.closeModal}></button>
+              </div>
+              <div className="modal-body">
+                <form>
+                  <div className="form-group">
+                    <input type="text" ref={this.editGameInput} onKeyPress={this.saveGameEnterKey} className="form-control" id="editInput" autoFocus></input>
+                  </div>
+                </form>
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-secondary" onClick={this.closeModal}>Close</button>
+                <button type="button" id="saveBtn" className="btn btn-primary" onClick={this.saveGame}>Save changes</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
