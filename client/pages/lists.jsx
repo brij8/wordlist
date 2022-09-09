@@ -107,9 +107,9 @@ export default class Lists extends React.Component {
     this.setState({ showWords: [] });
   }
 
-  // select a words # and string, set in state
-  selectWord(wordNum, wordText) {
-    this.setState({ wordClicked: wordNum });
+  // select a words ID# and string, set in state
+  selectWord(wordID, wordText) {
+    this.setState({ wordClicked: wordID });
     this.setState({ wordSelected: wordText });
   }
 

@@ -19,23 +19,26 @@ export default class Games extends React.Component {
     this.gameModal = React.createRef();
     this.editGameInput = React.createRef();
 
-    this.newGame = this.newGame.bind(this);
-    this.getGameLists = this.getGameLists.bind(this);
-    this.getWords = this.getWords.bind(this);
     this.setClassGame = this.setClassGame.bind(this);
     this.setClassList = this.setClassList.bind(this);
     this.setClassShowList = this.setClassShowList.bind(this);
     this.setClassWord = this.setClassWord.bind(this);
-    this.selectWord = this.selectWord.bind(this);
-    this.deleteGame = this.deleteGame.bind(this);
-    this.addList = this.addList.bind(this);
-    this.removeList = this.removeList.bind(this);
 
+    this.getWords = this.getWords.bind(this);
+    this.selectWord = this.selectWord.bind(this);
+
+    this.newGame = this.newGame.bind(this);
     this.editGame = this.editGame.bind(this);
     this.saveGame = this.saveGame.bind(this);
+    this.deleteGame = this.deleteGame.bind(this);
+
     this.saveGameEnterKey = this.saveGameEnterKey.bind(this);
+    this.getGameLists = this.getGameLists.bind(this);
     this.refreshGames = this.refreshGames.bind(this);
     this.closeModal = this.closeModal.bind(this);
+
+    this.addList = this.addList.bind(this);
+    this.removeList = this.removeList.bind(this);
   }
 
   componentDidMount() {
