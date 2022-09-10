@@ -272,6 +272,7 @@ export default class Lists extends React.Component {
             {/* delete word */}
               <button type="button" className="deleteWordBtn" onClick={this.deleteWord}>delete</button>
             </div>
+            <div className="wordflex">
             {
               this.state.showWords.map(word => (
                 <div key={word.listWordID} className="list-group-words">
@@ -280,6 +281,7 @@ export default class Lists extends React.Component {
                 </div>
               ))
             }
+            </div>
           </div>
         </div>
         {/* EDIT WORD MODAL */}
