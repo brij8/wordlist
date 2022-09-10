@@ -252,6 +252,7 @@ export default class Games extends React.Component {
           this.state.games.map(game => (
             <div key={game.gameID} className="list-group-games">
               <button type="button" className={this.setClassGame(game.gameID)} onClick={() => this.getGameLists(game.gameID, game.gameName)} onDoubleClick={this.editGame}>{game.gameName}</button>
+              {/* if gameID === state.gameClicked, run showLists.map ??? */}
             </div>
           ))
         }
@@ -284,6 +285,7 @@ export default class Games extends React.Component {
             <div className="wordmenu">
               <h5 className="words-label" id="word-label">## words in: this.state.listSelected</h5>
             </div>
+            <div className="wordflex">
             {
               this.state.showWords.map(word => (
                 <div key={word.listWordID} className="list-group-words">
@@ -291,6 +293,7 @@ export default class Games extends React.Component {
                 </div>
               ))
             }
+            </div>
           </div>
         </div>
       {/* EDIT GAME MODAL */}

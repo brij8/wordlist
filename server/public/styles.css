@@ -50,13 +50,33 @@ h2,
 
 .boxbox {
   display: flex;
+  justify-content: center;
 }
 
 .gamebox,
-.listbox,
-.wordbox {
-  flex-basis: 33%;
+.listbox {
+  flex-basis: 25%;
+}
+
+.gamebox {
   margin-right: auto;
+}
+
+.listbox {
+  margin-right: 5rem;
+}
+
+.wordbox {
+  flex-basis: 40%;
+}
+
+.wordflex {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.list-group-words {
+  flex-basis: 33%;
 }
 
 .list-group-item {
