@@ -236,84 +236,95 @@ export default class Games extends React.Component {
     return (
       <div className='py-5 gamelist'>
         <div className="titlebox">
-        <div className="gamestitle">
-        <h1>Games</h1>
-        <h2>user view/edit games</h2>
-        </div>
+          <div className="gamestitle">
+            <h1>Games</h1>
+            <h2>user view/edit games</h2>
+            </div>
         </div>
         <div className="boxbox">
-        <div className="gamebox">
-          <div className="gamemenu">
-            <button type="button" className="newGameBtn" onClick={this.newGame}>new</button>
-            <button type="button" className="editGameBtn" onClick={this.editGame}>edit</button>
-            <button type="button" className="deleteGameBtn" onClick={this.deleteGame}>delete</button>
-          </div>
-        { // show users games
-          this.state.games.map(game => (
-            <div key={game.gameID} className="list-group-games">
-              <button type="button" className={this.setClassGame(game.gameID)} onClick={() => this.getGameLists(game.gameID, game.gameName)} onDoubleClick={this.editGame}>{game.gameName}</button>
-              {/* if gameID === state.gameClicked, run showLists.map ??? */}
+          <div className="gamebox">
+            <div className="gamemenu">
+              <button type="button" className="newGameBtn" onClick={this.newGame}>new</button>
+              <button type="button" className="editGameBtn" onClick={this.editGame}>edit</button>
+              <button type="button" className="deleteGameBtn" onClick={this.deleteGame}>delete</button>
             </div>
-          ))
-        }
-        </div>
-        <div className="listbox">
-          <div className="listmenu">
-            <button type="button" className="addListBtn" onClick={this.addList}>add</button>
-            <button type="button" className="removeListBtn" onClick={this.removeList}>remove</button>
+          { // show users games ***IN PROGRESS***
+            this.state.games.map(game => (
+              game.gameID === this.state.gameClicked
+              // if game being mapped is also selected game, render that games button AND that games lists below it
+                ? (
+                  <div key={game.gameID}>
+                    <div className="list-group-games">
+                      <button type="button" className={this.setClassGame(game.gameID)} onClick={() => this.getGameLists(game.gameID, game.gameName)} onDoubleClick={this.editGame}>{game.gameName}</button>
+                    </div>
+                    <div className="sel-game-lists">
+                        {// show lists of selected game
+                          this.state.showLists.map(list => (
+                              <div key={list.listID} className="list-group-lists">
+                                <button type="button" className={this.setClassShowList(list.listID)} onClick={() => this.getWords(list.listID)}>{list.listName}</button>
+                              </div>
+                          ))
+                        }
+                    </div>
+                  </div>
+                  )
+              // if game is NOT selected, only render its button
+                : (
+                  <div key={game.gameID} className="list-group-games">
+                    <button type="button" className={this.setClassGame(game.gameID)} onClick={() => this.getGameLists(game.gameID, game.gameName)} onDoubleClick={this.editGame}>{game.gameName}</button>
+                  </div>)
+            ))
+          }
+
           </div>
-          <div className="sel-game-lists">
-          {// show lists of selected game
-            this.state.showLists.map(list => (
+          <div className="listbox">
+            <div className="listmenu">
+              <button type="button" className="addListBtn" onClick={this.addList}>add</button>
+              <button type="button" className="removeListBtn" onClick={this.removeList}>remove</button>
+            </div>
+            <div className="all-lists">
+            { // show all users lists
+              this.state.lists.map(list => (
                 <div key={list.listID} className="list-group-lists">
-                  <button type="button" className={this.setClassShowList(list.listID)} onClick={() => this.getWords(list.listID)}>{list.listName}</button>
-                </div>
-            ))
-          }
-          </div>
-          <div className="all-lists">
-          { // show all users lists
-            this.state.lists.map(list => (
-              <div key={list.listID} className="list-group-lists">
-                <button type="button" className={this.setClassList(list.listID)} onClick={() => this.getWords(list.listID, list.listName)}>{list.listName}</button>
-              </div>
-            ))
-          }
-          </div>
-          </div>
-          <div className="wordbox">
-            <div className="wordmenu">
-              <h5 className="words-label" id="word-label">## words in: this.state.listSelected</h5>
-            </div>
-            <div className="wordflex">
-            {
-              this.state.showWords.map(word => (
-                <div key={word.listWordID} className="list-group-words">
-                  <button type="button" className={this.setClassWord(word.listWordID)} onClick={() => this.selectWord(word.listWordID)}>{word.word}</button>
+                  <button type="button" className={this.setClassList(list.listID)} onClick={() => this.getWords(list.listID, list.listName)}>{list.listName}</button>
                 </div>
               ))
             }
             </div>
           </div>
-        </div>
-      {/* EDIT GAME MODAL */}
-        <div className="modal" ref={this.gameModal} id="editModal" tabIndex="-1">
-          <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title" id="editModalLabel">Edit: {this.state.gameSelected}</h5>
-                <button type="button" className="btn-close" onClick={this.closeModal}></button>
+          <div className="wordbox">
+              <div className="wordmenu">
+                <h5 className="words-label" id="word-label">## words in: this.state.listSelected</h5>
               </div>
-              <div className="modal-body">
-                <form>
-                  <div className="form-group">
-                    <input type="text" ref={this.editGameInput} onKeyPress={this.saveGameEnterKey} className="form-control" id="editInput" autoFocus></input>
+              <div className="wordflex">
+              {
+                this.state.showWords.map(word => (
+                  <div key={word.listWordID} className="list-group-words">
+                    <button type="button" className={this.setClassWord(word.listWordID)} onClick={() => this.selectWord(word.listWordID)}>{word.word}</button>
                   </div>
-                </form>
+                ))
+              }
               </div>
-              <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" onClick={this.closeModal}>Close</button>
-                <button type="button" id="saveBtn" className="btn btn-primary" onClick={this.saveGame}>Save changes</button>
+          </div>
+        {/* EDIT GAME MODAL */}
+          <div className="modal" ref={this.gameModal} id="editModal" tabIndex="-1">
+            <div className="modal-dialog">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title" id="editModalLabel">Edit: {this.state.gameSelected}</h5>
+                  <button type="button" className="btn-close" onClick={this.closeModal}></button>
+                </div>
+                <div className="modal-body">
+                  <form>
+                    <div className="form-group">
+                      <input type="text" ref={this.editGameInput} onKeyPress={this.saveGameEnterKey} className="form-control" id="editInput" autoFocus></input>
+                    </div>
+                  </form>
+                </div>
+                <div className="modal-footer">
+                  <button type="button" className="btn btn-secondary" onClick={this.closeModal}>Close</button>
+                  <button type="button" id="saveBtn" className="btn btn-primary" onClick={this.saveGame}>Save changes</button>
+                </div>
               </div>
             </div>
           </div>
