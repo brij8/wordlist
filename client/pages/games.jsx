@@ -238,7 +238,7 @@ export default class Games extends React.Component {
         <div className="titlebox">
           <div className="gamestitle">
             <h1>Games</h1>
-            <h2>user view/edit games</h2>
+            <h2>make a game, fill it with lists</h2>
             </div>
         </div>
         <div className="boxbox">
@@ -248,7 +248,7 @@ export default class Games extends React.Component {
               <button type="button" className="editGameBtn" onClick={this.editGame}>edit</button>
               <button type="button" className="deleteGameBtn" onClick={this.deleteGame}>delete</button>
             </div>
-          { // show users games ***IN PROGRESS***
+          { // show users games
             this.state.games.map(game => (
               game.gameID === this.state.gameClicked
               // if game being mapped is also selected game, render that games button AND that games lists below it
@@ -261,7 +261,7 @@ export default class Games extends React.Component {
                         {// show lists of selected game
                           this.state.showLists.map(list => (
                               <div key={list.listID} className="list-group-lists">
-                                <button type="button" className={this.setClassShowList(list.listID)} onClick={() => this.getWords(list.listID)}>{list.listName}</button>
+                              <button type="button" className={this.setClassShowList(list.listID)} onClick={() => this.getWords(list.listID, list.listName)}>{list.listName}</button>
                               </div>
                           ))
                         }
@@ -294,7 +294,7 @@ export default class Games extends React.Component {
           </div>
           <div className="wordbox">
               <div className="wordmenu">
-                <h5 className="words-label" id="word-label">## words in: this.state.listSelected</h5>
+                <h5 className="words-label" id="word-label">{this.state.showWords.length} words in: {this.state.listSelected}</h5>
               </div>
               <div className="wordflex">
               {
