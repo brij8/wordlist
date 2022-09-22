@@ -242,7 +242,7 @@ export default class Lists extends React.Component {
         <div className="titlebox">
           <div className="listtitle">
             <h1>Lists</h1>
-            <h2>user view/edit lists</h2>
+            <h2>make a list, fill it with words</h2>
           </div>
         </div>
         <div className="boxbox">
@@ -271,6 +271,7 @@ export default class Lists extends React.Component {
               <button type="button" className="editWordBtn" onClick={this.editWord}>edit</button>
             {/* delete word */}
               <button type="button" className="deleteWordBtn" onClick={this.deleteWord}>delete</button>
+              <h5 className="words-label" id="word-label">{this.state.showWords.length} words in: {this.state.listSelected}</h5>
             </div>
             <div className="wordflex">
             {

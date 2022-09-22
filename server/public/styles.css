@@ -81,16 +81,6 @@ h2,
 
 /* mapped button selections */
 
-.gamelist-item {
-  background-color: #c4c4c4;
-}
-
-.gamelist-item-action.active {
-  color: black;
-  background-color: #62a1ff;
-  border-color: #b2d0fc;
-}
-
 .list-group-item {
   background-color: #c4c4c4;
 }
