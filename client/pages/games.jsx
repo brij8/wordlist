@@ -66,7 +66,7 @@ export default class Games extends React.Component {
       .then(response => response.json())
       .then(gameLists => {
         const uniqueLists = [];
-
+        // filter dupe listNames to only render uniques
         for (const row of gameLists) {
           let found = false;
           for (const output of uniqueLists) {
