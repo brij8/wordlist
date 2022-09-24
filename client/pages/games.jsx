@@ -55,7 +55,7 @@ export default class Games extends React.Component {
       });
   }
 
-  // get lists from selected game ***AND ALL WORDS?? ***IN PROGRESS***
+  // get lists and all words from selected game
   getGameLists(gameID, gameName) {
     this.setState({ gameSelected: gameName });
     this.setState({ gameClicked: gameID });
