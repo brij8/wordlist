@@ -25,6 +25,7 @@ export default class Games extends React.Component {
     this.setClassWord = this.setClassWord.bind(this);
 
     this.getWords = this.getWords.bind(this);
+    this.getGLWords = this.getGLWords.bind(this);
     this.selectWord = this.selectWord.bind(this);
 
     this.newGame = this.newGame.bind(this);
@@ -54,7 +55,7 @@ export default class Games extends React.Component {
       });
   }
 
-  // get lists from selected game
+  // get lists from selected game ***AND ALL WORDS?? ***IN PROGRESS***
   getGameLists(gameID, gameName) {
     this.setState({ gameSelected: gameName });
     this.setState({ gameClicked: gameID });
@@ -64,12 +65,33 @@ export default class Games extends React.Component {
     fetch('/api/gamelist/' + gameID)
       .then(response => response.json())
       .then(gameLists => {
-        this.setState({ showLists: gameLists });
+        const uniqueLists = [];
+
+        for (const row of gameLists) {
+          let found = false;
+          for (const output of uniqueLists) {
+            if (output.listName === row.listName) { found = true; }
+          }
+          if (!found) { uniqueLists.push(row); }
+        }
+        this.setState({ showLists: uniqueLists, showWords: gameLists });
       });
   }
 
   // get words from selected list
   getWords(listID, listName) {
+    this.setState({ listClicked: listID });
+    this.setState({ listSelected: listName });
+    this.setState({ gameSelected: '' });
+    fetch('/api/listWords/' + listID)
+      .then(response => response.json())
+      .then(listwords => {
+        this.setState({ showWords: listwords });
+      });
+  }
+
+  // get words from selected game-list
+  getGLWords(listID, listName) {
     this.setState({ listClicked: listID });
     this.setState({ listSelected: listName });
     fetch('/api/listWords/' + listID)
@@ -261,7 +283,7 @@ export default class Games extends React.Component {
                         {// show lists of selected game
                           this.state.showLists.map(list => (
                               <div key={list.listID} className="list-group-lists">
-                              <button type="button" className={this.setClassShowList(list.listID)} onClick={() => this.getWords(list.listID, list.listName)}>{list.listName}</button>
+                              <button type="button" className={this.setClassShowList(list.listID)} onClick={() => this.getGLWords(list.listID, list.listName)}>{list.listName}</button>
                               </div>
                           ))
                         }
@@ -294,7 +316,7 @@ export default class Games extends React.Component {
           </div>
           <div className="wordbox">
               <div className="wordmenu">
-                <h5 className="words-label" id="word-label">{this.state.showWords.length} words in: {this.state.listSelected}</h5>
+              <h5 className="words-label" id="word-label">{this.state.showWords.length} words in: {this.state.gameSelected} {this.state.listSelected}</h5>
               </div>
               <div className="wordflex">
               {

@@ -53,16 +53,23 @@ app.get('/api/lists', (req, res, next) => {
 });
 
 // GET a Games Lists
+// +all words ***IN PROGRESS*** WORKS but now fix the .map
 app.get('/api/gamelist/:gameID', (req, res, next) => {
   const gameID = Number(req.params.gameID);
   const sql = `
   select
     "listID",
-    "listName"
+    "listName",
+    "word",
+    "listWordID"
   from
     "gamelist"
   join
     "lists"
+  using
+    ("listID")
+  join
+    "listwords"
   using
     ("listID")
   where
@@ -76,6 +83,29 @@ app.get('/api/gamelist/:gameID', (req, res, next) => {
     })
     .catch(err => next(err));
 });
+// app.get('/api/gamelist/:gameID', (req, res, next) => {
+//   const gameID = Number(req.params.gameID);
+//   const sql = `
+//   select
+//     "listID",
+//     "listName"
+//   from
+//     "gamelist"
+//   join
+//     "lists"
+//   using
+//     ("listID")
+//   where
+//     "gameID" = $1;
+//   `;
+//   const param = [gameID];
+//   db.query(sql, param)
+//     .then(results => {
+//       const lists = results.rows;
+//       res.json(lists);
+//     })
+//     .catch(err => next(err));
+// });
 
 // GET a Lists words
 app.get('/api/listwords/:listID', (req, res, next) => {
