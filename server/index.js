@@ -52,17 +52,23 @@ app.get('/api/lists', (req, res, next) => {
     .catch(err => next(err));
 });
 
-// GET a Games Lists
+// GET a Games Lists AND Words
 app.get('/api/gamelist/:gameID', (req, res, next) => {
   const gameID = Number(req.params.gameID);
   const sql = `
   select
     "listID",
-    "listName"
+    "listName",
+    "word",
+    "listWordID"
   from
     "gamelist"
   join
     "lists"
+  using
+    ("listID")
+  join
+    "listwords"
   using
     ("listID")
   where
