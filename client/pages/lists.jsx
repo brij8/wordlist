@@ -84,7 +84,6 @@ export default class Lists extends React.Component {
   }
 
   // refresh state.lists[] after editing a listName, used in saveList()
-  // will eventually want userID to pull users lists
   refreshLists() {
     fetch('/api/lists')
       .then(res => res.json())
@@ -256,6 +255,7 @@ export default class Lists extends React.Component {
               {/* delete list */}
               <button type="button" className="menu-btn delete-list-btn" onClick={this.deleteList}>delete</button>
             </div>
+            <div className="listflex">
             {
               this.state.lists.map(list => (
                 <div key={list.listID} className="list-group-lists">
@@ -263,6 +263,7 @@ export default class Lists extends React.Component {
                 </div>
               ))
             }
+            </div>
           </div>
           <div className="wordbox">
             <div className="wordmenu">
