@@ -229,7 +229,7 @@ export default class Games extends React.Component {
   // set class to show game selection
   setClassGame(key) {
     return (this.state.gameClicked === key)
-      ? 'list-group-item list-group-item-action active'
+      ? 'list-group-item list-group-item-action active-game'
       : 'list-group-item list-group-item-action';
   }
 
@@ -260,15 +260,16 @@ export default class Games extends React.Component {
         <div className="titlebox">
           <div className="gamestitle">
             <h1>Games</h1>
-            <h2>make a game, fill it with lists</h2>
+            <span className="games-subtitle">make a game, fill it with lists</span>
             </div>
         </div>
         <div className="boxbox">
           <div className="gamebox">
             <div className="gamemenu">
-              <button type="button" className="newGameBtn" onClick={this.newGame}>new</button>
-              <button type="button" className="editGameBtn" onClick={this.editGame}>edit</button>
-              <button type="button" className="deleteGameBtn" onClick={this.deleteGame}>delete</button>
+              <h5 className="game-label">games</h5>
+              <button type="button" className="menu-btn new-game-btn" onClick={this.newGame}>new</button>
+              <button type="button" className="menu-btn edit-game-btn" onClick={this.editGame}>edit</button>
+              <button type="button" className="menu-btn delete-game-btn" onClick={this.deleteGame}>delete</button>
             </div>
           { // show users games
             this.state.games.map(game => (
@@ -301,8 +302,9 @@ export default class Games extends React.Component {
           </div>
           <div className="listbox">
             <div className="listmenu">
-              <button type="button" className="addListBtn" onClick={this.addList}>add</button>
-              <button type="button" className="removeListBtn" onClick={this.removeList}>remove</button>
+              <h5 className="list-label">lists</h5>
+              <button type="button" className="menu-btn add-list-btn" onClick={this.addList}>add</button>
+              <button type="button" className="menu-btn remove-list-btn" onClick={this.removeList}>remove</button>
             </div>
             <div className="all-lists">
             { // show all users lists
@@ -316,7 +318,7 @@ export default class Games extends React.Component {
           </div>
           <div className="wordbox">
               <div className="wordmenu">
-              <h5 className="words-label" id="word-label">{this.state.showWords.length} words in: {this.state.gameSelected} {this.state.listSelected}</h5>
+              <h5 className="words-label" id="word-label"><span className="word-count">{this.state.showWords.length}</span> words in: <span className="sel-game-col">{this.state.gameSelected}</span> <span className="sel-list-col">{this.state.listSelected}</span></h5>
               </div>
               <div className="wordflex">
               {
