@@ -6,8 +6,7 @@ h1 {
   color: #6c9eea;
 }
 
-h2,
-.words-label {
+h2 {
   color: #c4c4c4;
 }
 
@@ -48,6 +47,20 @@ h2,
   margin-bottom: 35px;
 }
 
+.gamestitle,
+.listtitle {
+  display: flex;
+}
+
+.games-subtitle,
+.lists-subtitle {
+  font-size: 1rem;
+  font-style: oblique;
+  color: #9c9c9c;
+  padding-top: 0.75rem;
+  padding-left: 1rem;
+}
+
 .boxbox {
   display: flex;
   justify-content: center;
@@ -79,6 +92,35 @@ h2,
   flex-basis: 33%;
 }
 
+.gamemenu,
+.listmenu {
+  display: flex;
+  margin-bottom: 0.5rem;
+}
+
+.wordmenu {
+  display: flex;
+}
+
+.menu-btn {
+  border: none;
+  border-radius: 5%;
+  margin: 0.1rem;
+}
+
+.delete-game-btn,
+.delete-list-btn,
+.delete-word-btn {
+  background-color: #ffbaba;
+}
+
+.game-label,
+.list-label,
+.words-label {
+  color: #c4c4c4;
+  padding: 0 1rem;
+}
+
 /* mapped button selections */
 
 .list-group-item {
@@ -87,24 +129,38 @@ h2,
 
 .list-group-item.active {
   color: black;
-  background-color: #cfe2fe;
-  border-color: #b2d0fc;
+  background-color: #9cdd98;
+  border-color: #4caf50;
 }
 
 .list-group-item.active-list {
   color: black;
-  background-color: #b7ffae;
-  border-color: #5cd44c;
+  background-color: #9cdd98;
+  border-color: #4caf50;
+}
+
+.list-group-item.active-game {
+  color: black;
+  background-color: #a7cafd;
 }
 
 .sel-game-list-style {
   color: black;
-  border: 3px solid #b2d0fc;
+  background-color: #bdd7ff;
   padding-left: 2rem;
 }
 
-.all-lists {
-  /* border: 2px solid #5cd44c; */
+.word-count {
+  font-size: 1.5rem;
+  color: #9cdd98;
+}
+
+.sel-game-col {
+  color: #a7cafd;
+}
+
+.sel-list-col {
+  color: #9cdd98;
 }
 
 .modal {
@@ -116,4 +172,27 @@ h2,
   height: 100%;
   overflow-x: hidden;
   overflow-y: auto;
+}
+
+/* -----------------  @media sizing  ---------------- */
+
+/* @media screen and (max-width: 600px) {
+  .listbox {
+    margin-right: 1rem;
+  }
+} */
+
+@media screen and (max-width: 600px) {
+  .boxbox {
+    display: block;
+  }
+
+  .listbox {
+    margin-right: 0;
+  }
+
+  .gamebox,
+  .listbox {
+    padding-bottom: 2rem;
+  }
 }

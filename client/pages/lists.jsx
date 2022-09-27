@@ -242,18 +242,19 @@ export default class Lists extends React.Component {
         <div className="titlebox">
           <div className="listtitle">
             <h1>Lists</h1>
-            <h2>make a list, fill it with words</h2>
+            <span className="lists-subtitle">make a list, fill it with words</span>
           </div>
         </div>
         <div className="boxbox">
           <div className="listbox">
             <div className="listmenu">
+              <h5 className="list-label">lists</h5>
               {/* make new list */}
-              <button type="button" className="newListBtn" onClick={this.newList}>new</button>
+              <button type="button" className="menu-btn new-list-btn" onClick={this.newList}>new</button>
               {/* edit list */}
-              <button type="button" className="editListBtn" onClick={this.editList}>edit</button>
+              <button type="button" className="menu-btn edit-list-btn" onClick={this.editList}>edit</button>
               {/* delete list */}
-              <button type="button" className="deleteListBtn" onClick={this.deleteList}>delete</button>
+              <button type="button" className="menu-btn delete-list-btn" onClick={this.deleteList}>delete</button>
             </div>
             {
               this.state.lists.map(list => (
@@ -266,12 +267,12 @@ export default class Lists extends React.Component {
           <div className="wordbox">
             <div className="wordmenu">
             {/* add new word */}
-              <button type="button" className="addWordBtn" onClick={this.newWord}>add</button>
+              <button type="button" className="menu-btn add-word-btn" onClick={this.newWord}>new</button>
             {/* edit word */}
-              <button type="button" className="editWordBtn" onClick={this.editWord}>edit</button>
+              <button type="button" className="menu-btn edit-word-btn" onClick={this.editWord}>edit</button>
             {/* delete word */}
-              <button type="button" className="deleteWordBtn" onClick={this.deleteWord}>delete</button>
-              <h5 className="words-label" id="word-label">{this.state.showWords.length} words in: {this.state.listSelected}</h5>
+              <button type="button" className="menu-btn delete-word-btn" onClick={this.deleteWord}>delete</button>
+              <h5 className="words-label" id="word-label"><span className="word-count">{this.state.showWords.length}</span> words in: <span className="sel-list-col">{this.state.listSelected}</span></h5>
             </div>
             <div className="wordflex">
             {
