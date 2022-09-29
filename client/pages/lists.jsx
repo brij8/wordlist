@@ -18,6 +18,7 @@ export default class Lists extends React.Component {
     this.listModal = React.createRef();
     this.editListInput = React.createRef();
     this.delWordModal = React.createRef();
+    this.delListModal = React.createRef();
 
     this.getWords = this.getWords.bind(this);
     this.selectWord = this.selectWord.bind(this);
@@ -34,6 +35,7 @@ export default class Lists extends React.Component {
     this.editList = this.editList.bind(this);
     this.saveList = this.saveList.bind(this);
     this.deleteList = this.deleteList.bind(this);
+    this.delListConfirm = this.delListConfirm.bind(this);
 
     this.closeModal = this.closeModal.bind(this);
     this.refreshWords = this.refreshWords.bind(this);
@@ -106,6 +108,12 @@ export default class Lists extends React.Component {
     const delList = this.state.lists.findIndex(findList);
     this.state.lists.splice(delList, 1);
     this.setState({ showWords: [] });
+    this.delListModal.current.style.display = 'none';
+  }
+
+  // delete list confirm
+  delListConfirm() {
+    this.delListModal.current.style.display = 'block';
   }
 
   // select a words ID# and string, set in state
@@ -262,7 +270,7 @@ export default class Lists extends React.Component {
               {/* edit list */}
               <button type="button" className="menu-btn edit-list-btn" onClick={this.editList}>edit</button>
               {/* delete list */}
-              <button type="button" className="menu-btn delete-list-btn" onClick={this.deleteList}>delete</button>
+              <button type="button" className="menu-btn delete-list-btn" onClick={this.delListConfirm}>delete</button>
             </div>
             <div className="listflex">
             {
@@ -351,6 +359,21 @@ export default class Lists extends React.Component {
               <div className="modal-footer">
                 <button type="button" className="btn btn-secondary" onClick={this.closeModal}>Cancel</button>
                 <button type="button" id="del-word-modal-btn" className="btn btn-primary" onClick={this.deleteWord}>DELETE</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        {/* CONFIRM DELETE LIST MODAL */}
+        <div className="modal" ref={this.delListModal} id="delListModal" tabIndex="-1">
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title" id="delListModalLabel"><span className="del-text-1">DELETE: </span><span className="del-text-2">{this.state.listSelected}</span><span className="del-text-3">???</span></h5>
+                <button type="button" className="btn-close" onClick={this.closeModal}></button>
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-secondary" onClick={this.closeModal}>Cancel</button>
+                <button type="button" id="del-list-modal-btn" className="btn btn-primary" onClick={this.deleteList}>DELETE</button>
               </div>
             </div>
           </div>
