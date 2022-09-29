@@ -160,6 +160,8 @@ h2 {
   color: #9cdd98;
 }
 
+/* ----------- modal stying ---------- */
+
 .modal {
   position: fixed;
   top: 0;
@@ -169,6 +171,31 @@ h2 {
   height: 100%;
   overflow-x: hidden;
   overflow-y: auto;
+}
+
+.modal-footer {
+  justify-content: space-between;
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: #3dbd20;
+  border-color: #278911;
+}
+
+.btn-primary:hover {
+  background-color: #278911;
+  border-color: #278911;
+}
+
+.del-text-1 {
+  color: red;
+  margin-left: 5rem;
+}
+
+.del-text-2,
+.del-text-3 {
+  margin-left: 2rem;
 }
 
 /* -----------------  @media sizing  ---------------- */
@@ -185,5 +212,9 @@ h2 {
   .gamebox,
   .listbox {
     padding-bottom: 2rem;
+  }
+
+  .del-text-1 {
+    margin-left: 0;
   }
 }

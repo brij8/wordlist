@@ -17,6 +17,7 @@ export default class Lists extends React.Component {
     this.editWordInput = React.createRef();
     this.listModal = React.createRef();
     this.editListInput = React.createRef();
+    this.delWordModal = React.createRef();
 
     this.getWords = this.getWords.bind(this);
     this.selectWord = this.selectWord.bind(this);
@@ -27,6 +28,7 @@ export default class Lists extends React.Component {
     this.editWord = this.editWord.bind(this);
     this.saveWord = this.saveWord.bind(this);
     this.deleteWord = this.deleteWord.bind(this);
+    this.delWordConfirm = this.delWordConfirm.bind(this);
 
     this.newList = this.newList.bind(this);
     this.editList = this.editList.bind(this);
@@ -124,6 +126,12 @@ export default class Lists extends React.Component {
     const delWord = this.state.showWords.findIndex(findWord);
     this.state.showWords.splice(delWord, 1);
     this.forceUpdate();
+    this.delWordModal.current.style.display = 'none';
+  }
+
+  // delete word confirm
+  delWordConfirm() {
+    this.delWordModal.current.style.display = 'block';
   }
 
   // generate a new word
@@ -219,6 +227,7 @@ export default class Lists extends React.Component {
   closeModal() {
     this.wordModal.current.style.display = 'none';
     this.listModal.current.style.display = 'none';
+    this.delWordModal.current.style.display = 'none';
   }
 
   // set class to show list selection
@@ -272,7 +281,7 @@ export default class Lists extends React.Component {
             {/* edit word */}
               <button type="button" className="menu-btn edit-word-btn" onClick={this.editWord}>edit</button>
             {/* delete word */}
-              <button type="button" className="menu-btn delete-word-btn" onClick={this.deleteWord}>delete</button>
+              <button type="button" className="menu-btn delete-word-btn" onClick={this.delWordConfirm}>delete</button>
               <h5 className="words-label" id="word-label"><span className="word-count">{this.state.showWords.length}</span> words in: <span className="sel-list-col">{this.state.listSelected}</span></h5>
             </div>
             <div className="wordflex">
@@ -327,6 +336,21 @@ export default class Lists extends React.Component {
               <div className="modal-footer">
                 <button type="button" className="btn btn-secondary" onClick={this.closeModal}>Close</button>
                 <button type="button" id="saveListBtn" className="btn btn-primary" onClick={this.saveList}>Save changes</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        {/* CONFIRM DELETE WORD MODAL */}
+        <div className="modal" ref={this.delWordModal} id="delWordModal" tabIndex="-1">
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title" id="delWordModalLabel"><span className="del-text-1">DELETE: </span><span className="del-text-2">{this.state.wordSelected}</span><span className="del-text-3">???</span></h5>
+                <button type="button" className="btn-close" onClick={this.closeModal}></button>
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-secondary" onClick={this.closeModal}>Cancel</button>
+                <button type="button" id="del-word-modal-btn" className="btn btn-primary" onClick={this.deleteWord}>DELETE</button>
               </div>
             </div>
           </div>
