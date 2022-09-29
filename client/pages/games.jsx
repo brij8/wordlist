@@ -133,7 +133,6 @@ export default class Games extends React.Component {
   }
 
   // refresh state.games[] after editing a gameName, used in saveGame()
-  // will eventually want userID to pull users games
   refreshGames() {
     fetch('/api/games')
       .then(res => res.json())

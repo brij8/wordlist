@@ -137,7 +137,7 @@ export default class Lists extends React.Component {
     this.delWordModal.current.style.display = 'none';
   }
 
-  // delete word confirm
+  // delete word confirm modal
   delWordConfirm() {
     this.delWordModal.current.style.display = 'block';
   }
