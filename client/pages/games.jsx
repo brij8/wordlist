@@ -18,6 +18,7 @@ export default class Games extends React.Component {
 
     this.gameModal = React.createRef();
     this.editGameInput = React.createRef();
+    this.delGameModal = React.createRef();
 
     this.setClassGame = this.setClassGame.bind(this);
     this.setClassList = this.setClassList.bind(this);
@@ -32,6 +33,7 @@ export default class Games extends React.Component {
     this.editGame = this.editGame.bind(this);
     this.saveGame = this.saveGame.bind(this);
     this.deleteGame = this.deleteGame.bind(this);
+    this.delGameConfirm = this.delGameConfirm.bind(this);
 
     this.saveGameEnterKey = this.saveGameEnterKey.bind(this);
     this.getGameLists = this.getGameLists.bind(this);
@@ -131,7 +133,6 @@ export default class Games extends React.Component {
   }
 
   // refresh state.games[] after editing a gameName, used in saveGame()
-  // will eventually want userID to pull users games
   refreshGames() {
     fetch('/api/games')
       .then(res => res.json())
@@ -162,6 +163,7 @@ export default class Games extends React.Component {
   // close modal
   closeModal() {
     this.gameModal.current.style.display = 'none';
+    this.delGameModal.current.style.display = 'none';
   }
 
   // delete selected game
@@ -176,6 +178,12 @@ export default class Games extends React.Component {
     const delGame = this.state.games.findIndex(findGame);
     this.state.games.splice(delGame, 1);
     this.setState({ showLists: [] });
+    this.delGameModal.current.style.display = 'none';
+  }
+
+  // delete game cofirm modal
+  delGameConfirm() {
+    this.delGameModal.current.style.display = 'block';
   }
 
   // add lists to game
@@ -269,7 +277,7 @@ export default class Games extends React.Component {
               <h5 className="game-label">games</h5>
               <button type="button" className="menu-btn new-game-btn" onClick={this.newGame}>new</button>
               <button type="button" className="menu-btn edit-game-btn" onClick={this.editGame}>edit</button>
-              <button type="button" className="menu-btn delete-game-btn" onClick={this.deleteGame}>delete</button>
+              <button type="button" className="menu-btn delete-game-btn" onClick={this.delGameConfirm}>delete</button>
             </div>
           { // show users games
             this.state.games.map(game => (
@@ -348,6 +356,21 @@ export default class Games extends React.Component {
                 <div className="modal-footer">
                   <button type="button" className="btn btn-secondary" onClick={this.closeModal}>Close</button>
                   <button type="button" id="saveBtn" className="btn btn-primary" onClick={this.saveGame}>Save changes</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        {/* CONFIRM DELETE GAME MODAL */}
+          <div className="modal" ref={this.delGameModal} id="delGameModal" tabIndex="-1">
+            <div className="modal-dialog">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title" id="delGameModalLabel"><span className="del-text-1">DELETE: </span><span className="del-text-2">{this.state.gameSelected}</span><span className="del-text-3">???</span></h5>
+                  <button type="button" className="btn-close" onClick={this.closeModal}></button>
+                </div>
+                <div className="modal-footer">
+                  <button type="button" className="btn btn-secondary" onClick={this.closeModal}>Cancel</button>
+                  <button type="button" id="del-game-modal-btn" className="btn btn-primary" onClick={this.deleteGame}>DELETE</button>
                 </div>
               </div>
             </div>
